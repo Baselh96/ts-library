@@ -1,0 +1,1 @@
+export const reverse = (array: any[]) : any[] => array.reverse();
