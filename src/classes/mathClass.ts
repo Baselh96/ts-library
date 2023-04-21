@@ -1,5 +1,7 @@
 export class MathClass {
 
+    constructor() {}
+
     public sum(x: number, y: number): number {
         return x + y
     }
