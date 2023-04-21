@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MathClass = void 0;
 class MathClass {
+    constructor() { }
     sum(x, y) {
         return x + y;
     }
