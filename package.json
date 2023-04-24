@@ -8,7 +8,7 @@
     "/dist"
   ],
   "scripts": {
-    "convert": "tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "Basel",
