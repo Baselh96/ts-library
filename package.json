@@ -1,9 +1,10 @@
 {
   "name": "ts-library",
   "version": "1.0.3",
+  "private": true,
   "description": "",
   "main": "dist/index.js",
-  "type": "dist/index.d.ts",
+  "type": "commonjs",
   "files": [
     "/dist"
   ],
