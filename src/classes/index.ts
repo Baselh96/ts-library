@@ -1,1 +1,1 @@
-export { MathClass } from "./mathClass";
+export * from "./mathClass";
