@@ -1,1 +1,2 @@
-export { MathClass } from "./mathClass";
+export * from "./mathClass";
+export * from "./arrayClass";
