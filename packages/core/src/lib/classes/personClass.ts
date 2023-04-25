@@ -1,11 +1,19 @@
 export class PersonClass {
-    private name: string;
+  private name: string;
+  private bootstrapVersion;
 
-    constructor(name: string) {
-        this.name = name;
-    }
+  constructor(name: string) {
+    this.name = name;
+    try {
+      const bsv = bootstrap.Tooltip.VERSION.substr(0, 1);
 
-    public getName(): string {
-        return this.name;
+      this.bootstrapVersion = parseInt(bsv);
+    } catch (error) {
+      this.bootstrapVersion = 0;
     }
+  }
+
+  public getName(): string {
+    return this.name;
+  }
 }
