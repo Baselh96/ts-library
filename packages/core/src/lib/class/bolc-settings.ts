@@ -110,7 +110,7 @@ export class bolc__Settings {
   private symbol_delete: string = 'bi-trash';
   private symbol_help: string = 'bi-question-circle-fill';
 
-  private ConfigString: ConfigString[] = []; 
+  private ConfigString: ConfigString[] = [];
 
   constructor() {
     //to initialize the default values
@@ -119,8 +119,14 @@ export class bolc__Settings {
     //Check for bootstrap
     this.checkBootstrap();
 
+    //Checking the variable bol__msg_strings_iso
+    this.checkBol__msg_strings_iso();
+
     //Filling the _usablePages and _CheckedPages variables
     this.fillVariablePages();
+
+    //Call load method
+    this.Load();
   }
 
   /**
@@ -185,6 +191,18 @@ export class bolc__Settings {
   }
 
   /**
+   * this method checks if the file "bol__msg_strings_iso" were loaded using tags.
+   * If yes: then we change _formCodePage and we fill MsgStrings with the data of the loaded file.
+   */
+  private checkBol__msg_strings_iso(): void {
+   // const bol__msg_strings_iso = undefined;
+    if (bol__msg_strings_iso) {
+      this._formCodePage = 'ISO-8859-15';
+      this.MsgStrings = bol__msg_strings_iso;
+    }
+  }
+
+  /**
    * this method is used to fill the variables _usablePages and _CheckedPages according to the number
    * of div elements with Id: Page
    */
@@ -194,5 +212,8 @@ export class bolc__Settings {
     this._CheckedPages.fill(false, 0, e.length);
   }
 
+  public Load(): void {}
+
   public Save(): void {}
+
 }
