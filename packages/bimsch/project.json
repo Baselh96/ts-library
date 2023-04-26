@@ -1,0 +1,27 @@
+{
+  "name": "bimsch",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/bimsch/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/bimsch",
+        "main": "packages/bimsch/src/index.js",
+        "tsConfig": "packages/bimsch/tsconfig.lib.json",
+        "assets": ["packages/bimsch/*.md"],
+        "generatePackageJson": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/bimsch/**/*.js"]
+      }
+    }
+  },
+  "tags": []
+}

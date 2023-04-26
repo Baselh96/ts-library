@@ -605,7 +605,6 @@ export {
     UpdateHiddenOperator,
     UpdateHiddenAuthority,
     UpdateHiddenPlant,
-    UpdateHiddenAuthority,
     UpdateHiddenAddress,
     UpdateFormFields31,
     Form31Page_measurement,

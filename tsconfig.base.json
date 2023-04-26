@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@formular-js/bimsch": ["packages/bimsch/src/index.ts"],
       "@formular-js/core": ["packages/core/src/index.ts"],
       "@formular-js/form31": ["packages/form31/src/index.ts"]
     }
