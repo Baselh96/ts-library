@@ -1,3 +1,4 @@
+import { Tooltip } from 'bootstrap';
 import { getDefaultMsgStrings } from '../data/msg-string-data';
 import { ConfigString } from '../model/config-string.model';
 import { FieldError } from '../model/field-error.model';
@@ -175,15 +176,12 @@ export class bolc__Settings {
    * Consequently the variable bootstrapVersion is set.
    */
   private checkBootstrap(): void {
-    // pruefen, ob bootstrap verwendet wird
-    /* try {
-        b
-      let bsv = bootstrap.Tooltip.VERSION.substr(0, 1);
+    try {
+      const bsv = Tooltip.VERSION.substr(0, 1);
       this.bootstrapVersion = parseInt(bsv);
     } catch (error) {
       this.bootstrapVersion = 0;
-    } */
-    this.bootstrapVersion = 0;
+    }
   }
 
   /**

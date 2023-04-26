@@ -8,3 +8,4 @@
 */
 
 export * from './lib/class';
+export * from './lib/classes/personClass';
