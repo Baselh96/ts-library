@@ -9,7 +9,7 @@ export function createHTMLInput(id: string): HTMLInputElement {
   tempInput.id = id;
   tempInput.className = 'form-control';
   tempInput.type = 'hidden';
-  tempInput.value = `[ ${new ConfigString(
+  tempInput.value = `[${new ConfigString(
     'active_page_number',
     1
   ).toString()}]`;

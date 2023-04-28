@@ -2,7 +2,7 @@ import { getDefaultMsgStrings } from '../data/msg-string-data';
 import { ConfigString } from '../model/config-string.model';
 import { FieldError } from '../model/field-error.model';
 import { MsgString } from '../model/msg-string.model';
-import { bolGetTimeStamp, checkBootstrap, createHTMLInput, getCssVariable } from '../function';
+import { bolGetTimeStamp, checkBootstrap, createHTMLInput, getCssVariable, updateHtmlTextOfFileSizes } from '../function';
 import { ConfigStringValue } from '../type/configStringValue.type';
 import { File } from '../model/file.model';
 
@@ -111,7 +111,7 @@ export class bolc__Settings {
 
   private ConfigString: ConfigString[] = [];
 
-  constructor() {
+  constructor(private bol__msg_strings_iso?: any[], public bol__control_names?: any[], public contoll_names?: any[]) {
     //to initialize the default values
     this.MsgStrings = getDefaultMsgStrings();
 
@@ -119,7 +119,7 @@ export class bolc__Settings {
     this.bootstrapVersion = checkBootstrap();
 
     //Checking the variable bol__msg_strings_iso
-    this.checkBol__msg_strings_iso();
+    this.checkBol__msg_strings_iso(bol__msg_strings_iso);
 
     //Filling the _usablePages and _CheckedPages variables
     this.fillVariablePages();
@@ -184,7 +184,6 @@ export class bolc__Settings {
   set DialogMode(newValue: ConfigStringValue) {
     let item: ConfigString | undefined = this.findConfigString('DialogMode');
     item ? item.value = newValue: this.ConfigString.push(new ConfigString('DialogMode', 3)); 
-
     this.Save();
   }
 
@@ -207,21 +206,17 @@ export class bolc__Settings {
   }
 
   get FieldNamesAlternative() {
-    //ToDo: we should get the bol__control_names, contoll_names from outside this library
-    const bol__control_names = undefined;
-    const contoll_names = undefined;
-
     if (this._fdsAltNames == undefined) {
       let arf: any;
 
       try {
-        arf = bol__control_names;
+        arf = this.bol__control_names;
       } catch (err) {} // Version 1.x
       if (arf) {
         this._fdsAltNames = arf;
       } else {
         try {
-          arf = contoll_names;
+          arf = this.contoll_names;
         } catch (err) {} // bol OZG Original
         if (arf) this._fdsAltNames = arf;
       }
@@ -237,9 +232,7 @@ export class bolc__Settings {
    * this method checks if the file 'bol__msg_strings_iso' were loaded using tags.
    * If yes: then we change _formCodePage and we fill MsgStrings with the data of the loaded file.
    */
-  private checkBol__msg_strings_iso(): void {
-    //ToDo: we should get the bol__msg_strings_iso from outside this library
-    const bol__msg_strings_iso = undefined;
+  private checkBol__msg_strings_iso(bol__msg_strings_iso?: any[]): void {
     if (bol__msg_strings_iso) {
       this._formCodePage = 'ISO-8859-15';
       this.MsgStrings = bol__msg_strings_iso;
@@ -262,7 +255,7 @@ export class bolc__Settings {
    */
   public Load(): void {
     // Herewith we search for the HTML-ELement
-    let input: HTMLInputElement = document.getElementById(
+    let input: HTMLInputElement | undefined = document.getElementById(
       this.FieldNameConfigJSON
     ) as HTMLInputElement;
 
@@ -278,7 +271,7 @@ export class bolc__Settings {
 
       //Here we append the InputElement to the first shape found,
       //if there is at least one shape found
-      if (form) {
+      if (form && form.length !== 0) {
         form[0].appendChild(input);
         this.ConfigString = JSON.parse(input.value);
       }
@@ -292,13 +285,7 @@ export class bolc__Settings {
     this.addToConfigStrings('TimeStampLoad', bolGetTimeStamp());
 
     //to delete the content of field to output the total size of uploads, if it exists
-    this.updateHtmlTextOfFileSizes('');
-  }
-
-  updateHtmlTextOfFileSizes(newValue: string): void {
-    //if a field exists to output the total size of uploads => delete content
-    let e = document.getElementById('bol.FileSizes');
-    if (e) e.innerText = newValue;
+    updateHtmlTextOfFileSizes('');
   }
 
   /**
@@ -411,7 +398,7 @@ export class bolc__Settings {
    */
   UpdateFiles(fieldname?: string, filename?: string, filesize?: number): void {
     //to delete the content of field to output the total size of uploads, if it exists
-    this.updateHtmlTextOfFileSizes('');
+    updateHtmlTextOfFileSizes('');
 
     if (fieldname == undefined) return;
 
@@ -426,8 +413,8 @@ export class bolc__Settings {
         break;
       }
       // nicht gefunden, dann zum array hinzufuegen
-      case index > -1 && filename == undefined: {
-        this.Files.push(new File(fieldname, filename || "", filesize || 0));
+      case index < 0 && filename && filename.length !== 0: {
+        this.Files.push(new File(fieldname, filename!, filesize || 0));
         break;
       }
       // gefunden, update
@@ -444,7 +431,7 @@ export class bolc__Settings {
     this.FileSizes = parseFloat((this.FileSizes / 1024 / 1024).toFixed(2));
 
     //to update view of total size
-    this.updateHtmlTextOfFileSizes(this.FileSizes + " MByte");
+    updateHtmlTextOfFileSizes(this.FileSizes + " MByte");
   }
 
   /**
