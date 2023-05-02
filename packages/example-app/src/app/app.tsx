@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import styles from './app.module.css';
 import NxWelcome from './nx-welcome';
 import { bolc__Settings, ConfigString } from '@formular-js/core';
+
 export function App() {
   const config = `[
   {"id": "active_page_number", "value": 1},
@@ -24,7 +25,7 @@ export function App() {
   useEffect(() => {
     console.log('hello');
     const settings = new bolc__Settings();
-    console.log(document.getElementsByTagName('form')[0]?.children[0])    
+    
   }, []);
 
   return (

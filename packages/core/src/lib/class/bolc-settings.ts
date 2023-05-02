@@ -2,9 +2,13 @@ import { getDefaultMsgStrings } from '../data/msg-string-data';
 import { ConfigString } from '../model/config-string.model';
 import { FieldError } from '../model/field-error.model';
 import { MsgString } from '../model/msg-string.model';
-import { bolGetTimeStamp, checkBootstrap, createHTMLInput, getCssVariable, updateHtmlTextOfFileSizes } from '../function';
+import { bolGetTimeStamp } from '../function';
 import { ConfigStringValue } from '../type/configStringValue.type';
 import { File } from '../model/file.model';
+import { checkBootstrap } from '../function/checkBootstrap';
+import { createHTMLInput } from '../function/createHTMLInput';
+import { updateHtmlTextOfFileSizes } from '../function/updateHtmlTextOfFileSizes';
+import { getCssVariable } from '../function/getCssVariable';
 
 /***************************************************************************************************
  * Settings
@@ -119,6 +123,7 @@ export class bolc__Settings {
     this.bootstrapVersion = checkBootstrap();
 
     //Checking the variable bol__msg_strings_iso
+    //TODo: löschen von dieseFeather
     this.checkBol__msg_strings_iso(bol__msg_strings_iso);
 
     //Filling the _usablePages and _CheckedPages variables
@@ -212,6 +217,7 @@ export class bolc__Settings {
       try {
         arf = this.bol__control_names;
       } catch (err) {} // Version 1.x
+      
       if (arf) {
         this._fdsAltNames = arf;
       } else {

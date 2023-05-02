@@ -1,5 +1,7 @@
-export { bolGetTimeStamp } from "./bolGetTimeStamp";
-export { createHTMLInput } from "./createHTMLInput";
-export { checkBootstrap } from "./checkBootstrap";
-export { getCssVariable } from "./getCssVariable";
-export { updateHtmlTextOfFileSizes } from "./updateHtmlTextOfFileSizes";
+export { bolGetTimeStamp } from './bolGetTimeStamp';
+export { bol_GetObjectType } from './field-element/bol_GetObjectType';
+export { bol_Field } from './field-element/bol_Field';
+export { bol_FieldValue } from './field-element/bol_FieldValue';
+export { bol_UpdateLabel } from './field-element/bol_UpdateLabel';
+export { bol_GetFieldTitle } from './field-element/bol_GetFieldTitle'
+

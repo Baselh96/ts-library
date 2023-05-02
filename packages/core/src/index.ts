@@ -8,5 +8,6 @@
 */
 
 export * from './lib/class';
+export * from './lib/function';
 export * from './lib/model/config-string.model';
 export * from './lib/classes/personClass';
