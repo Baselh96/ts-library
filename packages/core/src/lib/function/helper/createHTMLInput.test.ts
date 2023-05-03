@@ -1,4 +1,4 @@
-import { ConfigString } from '../model/config-string.model';
+import { ConfigString } from '../../model/config-string.model';
 import { createHTMLInput } from './createHTMLInput';
 
 describe('createHTMLInput', () => {

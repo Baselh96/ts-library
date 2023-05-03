@@ -5,10 +5,11 @@ import { MsgString } from '../model/msg-string.model';
 import { bolGetTimeStamp } from '../function';
 import { ConfigStringValue } from '../type/configStringValue.type';
 import { File } from '../model/file.model';
-import { checkBootstrap } from '../function/checkBootstrap';
-import { createHTMLInput } from '../function/createHTMLInput';
-import { updateHtmlTextOfFileSizes } from '../function/updateHtmlTextOfFileSizes';
-import { getCssVariable } from '../function/getCssVariable';
+import { checkBootstrap } from '../function/helper/checkBootstrap';
+import { createHTMLInput } from '../function/helper/createHTMLInput';
+import { updateHtmlTextOfFileSizes } from '../function/helper/updateHtmlTextOfFileSizes';
+import { getCssVariable } from '../function/helper/getCssVariable';
+import { msgStringHelper } from '../function/helper/msgstringHelper';
 
 /***************************************************************************************************
  * Settings
@@ -26,9 +27,9 @@ export class bolc__Settings {
   private _formCodePage: string = 'UTF-8';
 
   // Level der Anzeige von Fehlermeldungen: 3 = bootstrap Dialog, 2 = alert, 1 = console, 0 = keine Anzeige
-  private _modeError: number | undefined;
+  public _modeError: number | undefined;
   // Auflistung der Fehlerfelder beim Check einer Seite oder eines Blocks von Feldern
-  private _fdsError: FieldError[] = [];
+  public _fdsError: FieldError[] = [];
   // Farbe fuer die Anzeige von Fehlern (Hintergrund)
   private _colorErrorBg: string = '';
   // Komplementaerfarbe fuer die Anzeige von Fehlern (Text)
@@ -39,9 +40,9 @@ export class bolc__Settings {
   // soll das HTML-Attribut accept für Dateifelder verwendet werden
   private useAccept4Files: ConfigStringValue | undefined;
   // zulaessige Dateierweiterungen und MIME-Types
-  private fileTypes: ConfigStringValue | undefined;
+  public fileTypes: ConfigStringValue | undefined;
   // maximale Dateigroesse in MByte
-  private FileMaxSize: ConfigStringValue | undefined;
+  public FileMaxSize: ConfigStringValue | undefined;
   // Umfang der im Formular bereits geladenen Dateien in MByte
   private FileSizes: number = 0;
   // JSON-array der im Formular geladenen Dateien
@@ -79,12 +80,12 @@ export class bolc__Settings {
   private _ModeTemp: boolean = true;
 
   // sollen die Linien um die StepButton verwendet werden?
-  private _StepButtonImage: boolean = true;
+  public _StepButtonImage: boolean = true;
   // sollen automatisch Zahlen für StepButton verwendet werden?
-  private _StepButtonCounter: boolean = false;
-  private _StepButtonLayout: string = 'ib';
+  public _StepButtonCounter: boolean = false;
+  public _StepButtonLayout: string = 'ib';
   // top | left
-  private _StepButtonPosition: string = 'top';
+  public _StepButtonPosition: string = 'top';
 
   /*  allgemeine, oft verwendete Texte */
 
@@ -233,6 +234,11 @@ export class bolc__Settings {
   set FieldNamesAlternative(newValue: any[]) {
       this._fdsAltNames = newValue;
   }
+
+  get language(): string {
+    return this._formLanguage;
+  }
+  
 
   /**
    * this method checks if the file 'bol__msg_strings_iso' were loaded using tags.
@@ -448,17 +454,7 @@ export class bolc__Settings {
    * @param msgRegplace2 is the second placeholder
    * @returns MessageContent of found Message
    */
-  public GetMsgString(key: string, msgRegplace1?: string, msgRegplace2?: string) {
-    let msg: MsgString | undefined = 
-      this.MsgStrings.find(msg => msg.msgid == key && msg.msglng == this._formLanguage) ||
-      this.MsgStrings.find(msg => msg.msgid == key && msg.msglng == "de") || 
-      this.MsgStrings.find(msg => msg.msgid == key); 
-
-    if (!msg) return "";
-
-    let msgValue = msg.msg;
-    if (msgRegplace1) msgValue = msgValue.replace("%1%", msgRegplace1);
-    if (msgRegplace2) msgValue = msgValue.replace("%2%", msgRegplace2);
-    return msgValue;
+  public GetMsgString(key: string, msgRegplace1?: string, msgRegplace2?: string): string {
+    return msgStringHelper(key, this.MsgStrings, this._formLanguage, msgRegplace1, msgRegplace2);
   }
 }

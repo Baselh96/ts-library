@@ -25,7 +25,6 @@ export function App() {
   useEffect(() => {
     console.log('hello');
     const settings = new bolc__Settings();
-    
   }, []);
 
   return (
