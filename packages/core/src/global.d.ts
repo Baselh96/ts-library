@@ -1,3 +1,4 @@
+import { bolc__Dialog, bolc__Form, bolc__Steps } from './lib/class';
 import { bolc__Settings } from './lib/class/bolc-settings';
 
 /*
@@ -7,10 +8,10 @@ import { bolc__Settings } from './lib/class/bolc-settings';
 declare global {
   interface Window {
     bolSettings: bolc__Settings;
-    bolDialog: any;
-    bolForm: any;
+    bolDialog: bolc__Dialog;
+    bolForm: bolc__Form;
     bolPage: any;
-    bolSteps: any;
+    bolSteps: bolc__Steps;
     bolBSK: any;
     bolFormVersion: string;
   }

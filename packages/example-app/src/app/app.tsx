@@ -41,6 +41,7 @@ export function App() {
           defaultValue={config2}
         ></textarea>
       </form>
+      <fieldset></fieldset>
       <NxWelcome title="example-app" />
       <div />
     </>

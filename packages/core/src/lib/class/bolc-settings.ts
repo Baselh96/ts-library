@@ -54,11 +54,11 @@ export class bolc__Settings {
   private _CheckedPages: boolean[] = [];
   private _usablePages: boolean[] = [];
   // sollen erweiterte Fehlermeldungen auf der console ausgegeben werden
-  private _modeDebug: boolean = false;
+  public _modeDebug: boolean = false;
   // soll mit Erreichen der letzten Seite automatisch die Zusammenfassung erzeugt werden
   private _modeSummary: boolean = true;
 
-  private _modeJSON4Send: boolean = false;
+  public _modeJSON4Send: boolean = false;
 
   // soll statt Symbol ein Stern fuer Pflichtfeld angezeigt werden
   private _useStar4required: boolean = false;
@@ -70,7 +70,7 @@ export class bolc__Settings {
   // array mit Feldern und alternativen Feldbezeichnungen fuer die Zusammenfassungsseite
   private _fdsAltNames: any[] = []; //ToDo
   // array mit Feldnamen, welche nicht auf der Zusammenfassungsseite anzuzeigen sind
-  private fieldsNotInSummary: string[] = [];
+  public fieldsNotInSummary: string[] = [];
   // array mit Feldnamen, welches Feld soll auf welcher Seite den Focus erhalten
   private pageFocus: any[] = [];
   // Rueckfrage, ob Feldinhalte aus einem Feld-Container geloescht werden sollen
@@ -78,6 +78,7 @@ export class bolc__Settings {
 
   // Modus fuer das Zwischenspeichern: 2 = lokal, 1 = auf bol-Server
   private _ModeTemp: boolean = true;
+  public TempMode: number = 0;
 
   // sollen die Linien um die StepButton verwendet werden?
   public _StepButtonImage: boolean = true;
@@ -98,7 +99,7 @@ export class bolc__Settings {
   private _ttInfo: string = '';
   private _ttDlgInfoTitle: string = '';
 
-  private FieldNameConfigJSON: string = 'bol.FormSettings';
+  public FieldNameConfigJSON: string = 'bol.FormSettings';
 
   // Name von bootstrap Symbolen zur Anzeige
   //private symbol_fieldrequired: string = 'bi-star-fill';
