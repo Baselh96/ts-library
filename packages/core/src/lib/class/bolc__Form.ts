@@ -7,6 +7,8 @@ import { bolHide } from '../function/objects/bolHide';
 import { bolShow } from '../function/objects/bolShow';
 import { bol_getFieldsetLegend } from '../function/recursive-fun/bol_getFieldsetLegend';
 import { bol_getPage4Object } from '../function/recursive-fun/bol_getPage4Object';
+import { bolc__Settings } from './bolc-settings';
+import { bolc__Page } from './bolc__Page';
 
 export class bolc__Form {
   private _obj: HTMLFormElement | undefined;
@@ -24,12 +26,25 @@ export class bolc__Form {
   private _PageCheck: any[] = []; //ToDo: we should change the datatype
   private numFields: number;
 
+  //Is an instance of the bolSettings class, which we get as a parameter.
+  private bolSettings: bolc__Settings;
+  //Is an instance of the bolPage class, which we get as a parameter.
+  private bolPage: bolc__Page;
+
+  private bolFormVersion: string;
+
   constructor(
+    bolSettings: bolc__Settings,
+    bolPage: bolc__Page,
+    bolFormVersion: string,
     numFields: number,
     public bol__control_names?: any[],
     public contoll_names?: any[],
     public bol__notInSummary?: any[]
   ) {
+    this.bolSettings = bolSettings;
+    this.bolPage = bolPage;
+    this.bolFormVersion = bolFormVersion;
     this.numFields = numFields;
     // Get the form element with the name "bolForm"
     this._obj = document.getElementsByName('bolForm')[0] as HTMLFormElement;
@@ -110,7 +125,7 @@ export class bolc__Form {
       // Try to restore the project data from temporary storage
       try {
         //TODO: implement this function
-        bolProject_RestoreFromTemp();
+        //bolProject_RestoreFromTemp();
       } catch (err) {
         // If an error occurs while restoring data, ignore it and proceed
       }
@@ -130,16 +145,16 @@ export class bolc__Form {
     if (this.valueTemp === '') return false;
 
     // Clear the timestamp for saving
-    window.bolSettings.TimeStampSave = '';
+    this.bolSettings.TimeStampSave = '';
 
     // Try to save the project for temporary storage
     try {
       //TODO: implement this function
-      bolProject_SaveForTemp();
+      //bolProject_SaveForTemp();
     } catch (err) {}
 
     // Check the value of TempMode
-    switch (window.bolSettings.TempMode) {
+    switch (this.bolSettings.TempMode) {
       // If TempMode is 2, do nothing
       case 2:
         break;
@@ -165,18 +180,18 @@ export class bolc__Form {
     if (targetURL == '') return false;
 
     // Reset the time stamp for saving
-    window.bolSettings.TimeStampSend = '';
+    this.bolSettings.TimeStampSend = '';
 
     // call save-function to save the form
-    window.bolSettings.Save();
+    this.bolSettings.Save();
 
     // Check if the form mode is set to JSON
-    if (window.bolSettings._modeJSON4Send) {
+    if (this.bolSettings._modeJSON4Send) {
       // If it is, convert the config JSON to a string and update the field value
       //TODO: implement this function
-      getField(window.bolSettings.FieldNameConfigJSON).value = JSON.stringify(
-        getField(window.bolSettings.FieldNameConfigJSON).value
-      );
+      /* getField(this.bolSettings.FieldNameConfigJSON).value = JSON.stringify(
+        getField(this.bolSettings.FieldNameConfigJSON).value
+      ); */
     }
 
     // Submit the form to the target URL with no validation
@@ -197,9 +212,9 @@ export class bolc__Form {
 
     // Call the global onsubmit event handler if it exists, and return if it returns false
     //TODO: implement this function
-    if (window.onsubmit && !OnSubmit(noValidation)) {
+    /* if (window.onsubmit && !OnSubmit(noValidation)) {
       return false;
-    }
+    } */
 
     if (this._obj) {
       // Set the form's action to the specified URL
@@ -217,18 +232,20 @@ export class bolc__Form {
   /**
    * this methode is for update the html element wappen
    * and create the footer of page
+   * @param createFooter is a boolean value for creating footer
    */
-  public StyleIt(Mode?: any): boolean | undefined {
+  public StyleIt(createFooter: boolean): boolean | undefined {
     if (this._obj == undefined) return false;
 
     //update Wappen, if exists
     updateWappen();
 
-    // bol Logo Bar anzeigen?
-    if (Mode != undefined) return;
+    // bol Logo Bar show?
+    if (!createFooter) return;
 
     //To create the footer
-    createBolFooterBar();
+    createBolFooterBar(this.bolSettings, this.bolFormVersion);
+    return true;
   }
 
   /**
@@ -282,7 +299,7 @@ export class bolc__Form {
     if (htmlString != '') {
       ele.innerHTML =
         '<div class="col"><span class="bol-h2">' +
-        window.bolSettings.GetMsgString('txt_sidebar_questions') +
+        this.bolSettings.GetMsgString('txt_sidebar_questions') +
         '</span><br><br>' +
         htmlString +
         '</div>';
@@ -361,7 +378,7 @@ export class bolc__Form {
         '<br><br><a href="' +
         this._Impressum_Link +
         '" target="_blank" class="bol-sidebar-link">' +
-        window.bolSettings.GetMsgString('txt_impress_link') +
+        this.bolSettings.GetMsgString('txt_impress_link') +
         '</a>';
     }
 
@@ -372,7 +389,7 @@ export class bolc__Form {
         '<br><br><a href="' +
         this._Kontakt_Link +
         '" target="_blank" class="bol-sidebar-link">' +
-        window.bolSettings.GetMsgString('txt_kontakt_link') +
+        this.bolSettings.GetMsgString('txt_kontakt_link') +
         '</a>';
     }
 
@@ -383,7 +400,7 @@ export class bolc__Form {
         '<br><br><a href="' +
         this._DSGVO_Link +
         '" target="_blank" class="bol-sidebar-link">' +
-        window.bolSettings.GetMsgString('txt_dsgvo_link') +
+        this.bolSettings.GetMsgString('txt_dsgvo_link') +
         '</a>';
     }
 
@@ -414,7 +431,7 @@ export class bolc__Form {
     // Declare and initialize ProjectOutput variable
     let ProjectOutput;
 
-    try {
+    /* try {
       // Attempt to call bolProject_Summary function and store result in ProjectOutput variable
       //ToDO: implement this both functions
       ProjectOutput = bolProject_Summary(page);
@@ -432,14 +449,15 @@ export class bolc__Form {
       }
 
       // Go to the page indicated by the cntOutput container element
-      window.bolPage.goTo(page);
+      this.bolPage.goTo(page);
       return;
-    }
+    } */
 
     this.checkGlobalScript();
 
     cntOutput.innerHTML = this.getStringOutput();
-    window.bolPage.goTo(page);
+    this.bolPage.goTo(page);
+    return true;
   }
 
   /**
@@ -448,15 +466,15 @@ export class bolc__Form {
   private checkGlobalScript(): void {
     // Check if alternative field names have been defined in the global script
     if (typeof this.bol__control_names !== 'undefined') {
-      window.bolSettings.FieldNamesAlternative = this.bol__control_names;
+      this.bolSettings.FieldNamesAlternative = this.bol__control_names;
     } else if (typeof this.contoll_names !== 'undefined') {
-      window.bolSettings.FieldNamesAlternative = this.contoll_names;
+      this.bolSettings.FieldNamesAlternative = this.contoll_names;
     }
 
     // Check if fields not in summary have been defined in the global script
     let fieldsNotInSummary = this.bol__notInSummary || [];
     if (fieldsNotInSummary.length > 0) {
-      window.bolSettings.fieldsNotInSummary = fieldsNotInSummary;
+      this.bolSettings.fieldsNotInSummary = fieldsNotInSummary;
     }
   }
 
@@ -467,35 +485,20 @@ export class bolc__Form {
   public getStringOutput(): string {
     let stringOutput: string = '';
     let fieldset: string = '';
+    let linealternate: boolean = true;
 
-    for (let i = 0; i < this.numFields; i++) {
+   /*  for (let i = 0; i < this.numFields; i++) {
       //ToDO: implement this both functions
       let field = getField(getNthFieldName(i));
-      let fieldvalue = '';
       let fieldset_active = '';
-      let linealternate = true;
-
+      
       if (!field) continue;
       // if it should not appear in the summary, check for this class
-      if (FieldNotInSummary(field)) continue;
-      if (field.id == window.bolSettings.FieldNameConfigJSON) continue;
-
-      switch (field.type) {
-        case 'text':
-        case 'textarea':
-          fieldvalue = field.value.trim();
-          if (field.type == 'textarea')
-            fieldvalue = '<pre>' + fieldvalue + '</pre>';
-          break;
-        case 'file':
-          fieldvalue = field.value.replace('C:\\fakepath\\', '');
-          break;
-        case 'select':
-          fieldvalue = field.value;
-          break;
-        default:
-          fieldvalue = field.value;
-      }
+      if (FieldNotInSummary(field, this.bolSettings)) continue;
+      if (field.id == this.bolSettings.FieldNameConfigJSON) continue;
+      
+      //To get the value of the field
+      let fieldvalue = this.getFieldValue(field);
 
       // get current fieldset title
       fieldset_active = bol_getFieldsetLegend(field);
@@ -508,22 +511,14 @@ export class bolc__Form {
         fieldset = fieldset_active;
       }
 
-      if (linealternate) {
-        stringOutput += this.createRow(
-          bol_GetFieldTitle(field),
-          fieldvalue,
-          false
-        );
-        linealternate = false;
-      } else {
-        stringOutput += this.createRow(
-          bol_GetFieldTitle(field),
-          fieldvalue,
-          true
-        );
-        linealternate = true;
-      }
-    }
+      stringOutput += this.createRow(
+        bol_GetFieldTitle(field),
+        fieldvalue,
+        !linealternate
+      );
+
+      linealternate = !linealternate;
+    } */
     return stringOutput;
   }
 
@@ -549,5 +544,28 @@ export class bolc__Form {
       <div class="col-sm-5 ${leftClass}">${title}</div>
       <div class="col-sm-7 ${rightClass}">${value}</div>
     </div>`;
+  }
+
+  /**
+   * This function returns the value of a form field based on its type
+   * If it is a text or textarea field, it returns the trimmed value and wraps the value in pre tags if it is a textarea field.
+   * If it is a file input, it returns the value without the fakepath prefix.
+   * For all other field types, it simply returns the value
+   * @param field is the field
+   * @returns is the value of the field
+   */
+  private getFieldValue(field: any): string {
+    switch (field.type) {
+      case 'text':
+      case 'textarea':
+        let fieldvalue = field.value.trim();
+        return field.type == 'textarea'
+          ? `<pre>${fieldvalue}</pre>`
+          : fieldvalue;
+      case 'file':
+        return field.value.replace('C:\\fakepath\\', '');
+      default:
+        return field.value;
+    }
   }
 }

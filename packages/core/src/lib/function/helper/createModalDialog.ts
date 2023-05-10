@@ -8,7 +8,7 @@ export function createModalDialog(): HTMLElement {
   modalDialog.id = 'bolDialog';
   modalDialog.classList.add('modal');
   modalDialog.tabIndex = -1;
-  modalDialog.role = 'dialog';
+  //modalDialog.role = 'dialog';
   modalDialog.setAttribute('aria-hidden', 'true');
 
   //Create body of dialog
@@ -19,7 +19,7 @@ export function createModalDialog(): HTMLElement {
     'modal-dialog-centered',
     'modal-dialog-scrollable'
   );
-  modalDialogBody.role = 'document';
+  //modalDialogBody.role = 'document';
 
   //Create Content of dialog
   const modalContent = document.createElement('div');

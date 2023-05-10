@@ -1,4 +1,5 @@
 import { bolc__Settings } from '../../class/bolc-settings';
+import { InitForm } from '../../class/initForm';
 import { bol_GetFieldTitle } from './bol_GetFieldTitle';
 
 describe('bol_GetFieldTitle', () => {
@@ -9,7 +10,7 @@ describe('bol_GetFieldTitle', () => {
 
     document.body.appendChild(input);
     
-    window.bolSettings = new bolc__Settings();
+    InitForm.bolSettings = new bolc__Settings();
 
     expect(bol_GetFieldTitle(input)).toEqual('testNameTitle');
   });

@@ -1,20 +1,26 @@
-import bootstrap = require('bootstrap');
+import { Modal } from 'bootstrap';
 import { createModalDialog } from '../function/helper/createModalDialog';
 import { msgStringHelper } from '../function/helper/msgstringHelper';
 import { MsgString } from '../model/msg-string.model';
+import { bolc__Settings } from './bolc-settings';
 
 /***************************************************************************************************
  * Dialog
-***************************************************************************************************/
+ ***************************************************************************************************/
 export class bolc__Dialog {
   //is the dialog-modal
-  private _obj: bootstrap.Modal | undefined;
+  private _obj: Modal | undefined;
 
   private bol__project_strings: MsgString[];
 
-  constructor(bol__project_strings: MsgString[]) {
+  //Is an instance of the Settings class, which we get as a parameter in the configuration.
+  private bolSettings: bolc__Settings;
+
+  constructor(bolSettings: bolc__Settings, bol__project_strings: MsgString[]) {
+    this.bolSettings = bolSettings;
+
     this.bol__project_strings = bol__project_strings;
-    if (window.bolSettings.isBootstrap) {
+    if (this.bolSettings.isBootstrap) {
       //We see if we already have the dialog modal
       let e: HTMLElement | null = document.getElementById('bolDialog');
       //If not, then we create a dialog
@@ -22,7 +28,7 @@ export class bolc__Dialog {
         e = createModalDialog();
       }
 
-      this._obj = new bootstrap.Modal(e!, { keyboard: false });
+      this._obj = new Modal(e!, { keyboard: false });
     } else {
       this._obj = undefined;
     }
@@ -72,7 +78,7 @@ export class bolc__Dialog {
     return msgStringHelper(
       key,
       this.bol__project_strings,
-      window.bolSettings.language
+      this.bolSettings.language
     );
   }
 
@@ -128,7 +134,7 @@ export class bolc__Dialog {
 
     //If bootstrap is used in the application, then we change the styling
     // and we show the dialog
-    if (window.bolSettings.isBootstrap) {
+    if (this.bolSettings.isBootstrap) {
       this.ChangeStyle(1);
       if (this._obj) this._obj.show();
 
@@ -149,28 +155,28 @@ export class bolc__Dialog {
     this.changeButtonDisplay('none');
 
     //then we create the dialog according to the modeError
-    switch (window.bolSettings._modeError) {
+    switch (this.bolSettings._modeError) {
       case 3:
         this.ChangeStyle(2);
-        if (window.bolSettings._fdsError.length == 1) {
-          errorMessage = window.bolSettings.GetMsgString(
+        if (this.bolSettings._fdsError.length == 1) {
+          errorMessage = this.bolSettings.GetMsgString(
             'error_DlgTextTopSingle'
           );
           this.setTitle(
-            window.bolSettings.GetMsgString('error_DlgHeadSingle', '')
+            this.bolSettings.GetMsgString('error_DlgHeadSingle', '')
           );
         } else {
-          errorMessage = window.bolSettings.GetMsgString('error_DlgTextTop');
+          errorMessage = this.bolSettings.GetMsgString('error_DlgTextTop');
           this.setTitle(
-            window.bolSettings.GetMsgString(
+            this.bolSettings.GetMsgString(
               'error_DlgHead',
-              window.bolSettings._fdsError.length.toString(),
+              this.bolSettings._fdsError.length.toString(),
               ''
             )
           );
         }
         errorMessage += '<br><ul>';
-        window.bolSettings._fdsError.forEach((item) => {
+        this.bolSettings._fdsError.forEach((item) => {
           errorMessage += '<li>' + item.title;
         });
         this.setMessage(errorMessage + '</ul>');
@@ -181,35 +187,35 @@ export class bolc__Dialog {
         }
         break;
       case 2:
-        if (window.bolSettings._fdsError.length == 1) {
-          errorMessage = window.bolSettings.GetMsgString(
+        if (this.bolSettings._fdsError.length == 1) {
+          errorMessage = this.bolSettings.GetMsgString(
             'error_DlgTextTopSingle'
           );
         } else {
-          errorMessage = window.bolSettings.GetMsgString('error_DlgTextTop');
+          errorMessage = this.bolSettings.GetMsgString('error_DlgTextTop');
         }
-        window.bolSettings._fdsError.forEach((item) => {
+        this.bolSettings._fdsError.forEach((item) => {
           errorMessage += '\n*  ' + item.title;
         });
         errorMessage =
-          window.bolSettings.GetMsgString('error_dialogtoptext') + errorMessage;
+          this.bolSettings.GetMsgString('error_dialogtoptext') + errorMessage;
         alert(errorMessage);
         break;
       case 1:
-        if (window.bolSettings._fdsError.length == 1) {
-          errorMessage = window.bolSettings.GetMsgString(
+        if (this.bolSettings._fdsError.length == 1) {
+          errorMessage = this.bolSettings.GetMsgString(
             'error_DlgTextTopSingle'
           );
         } else {
-          errorMessage = window.bolSettings.GetMsgString('error_DlgTextTop');
+          errorMessage = this.bolSettings.GetMsgString('error_DlgTextTop');
         }
 
         console.log(errorMessage);
 
-        window.bolSettings._fdsError.forEach((item) => {
+        this.bolSettings._fdsError.forEach((item) => {
           console.log(item.name, ':', item.title);
         });
-      default:
+        break;
     }
   }
 
@@ -219,23 +225,23 @@ export class bolc__Dialog {
    * @param modus determines the type of the error, whether it is a file size or a file type.
    */
   public ShowErrorFile(modus: number): void {
-    this.setTitle(window.bolSettings.GetMsgString('error_FileTitle'));
+    this.setTitle(this.bolSettings.GetMsgString('error_FileTitle'));
     this.changeButtonDisplay('');
 
     if (modus == 2) {
       this.setMessage(
-        window.bolSettings.GetMsgString(
-          (window.bolSettings.fileTypes as string).split(',').length === 1
+        this.bolSettings.GetMsgString(
+          (this.bolSettings.fileTypes as string).split(',').length === 1
             ? 'error_FileTypeSingle'
             : 'error_FileTypes',
-          window.bolSettings.fileTypes as string
+          this.bolSettings.fileTypes as string
         )
       );
     } else if (modus == 1)
       this.setMessage(
-        window.bolSettings.GetMsgString(
+        this.bolSettings.GetMsgString(
           'error_FileSize',
-          (window.bolSettings.FileMaxSize as number).toString()
+          (this.bolSettings.FileMaxSize as number).toString()
         )
       );
 
@@ -259,8 +265,8 @@ export class bolc__Dialog {
     this.changeButtonDisplay('');
 
     //then weset the title and message
-    this.setTitle(window.bolSettings.GetMsgString('error_DlgTextPageTop'));
-    this.setMessage(window.bolSettings.GetMsgString('error_DlgTextPageText'));
+    this.setTitle(this.bolSettings.GetMsgString('error_DlgTextPageTop'));
+    this.setMessage(this.bolSettings.GetMsgString('error_DlgTextPageText'));
 
     this.showDialog();
   }
@@ -294,7 +300,7 @@ export class bolc__Dialog {
    *This method is used to display the dialog.
    */
   private showDialog(): void {
-    switch (window.bolSettings._modeError) {
+    switch (this.bolSettings._modeError) {
       case 3:
         this.ChangeStyle(2);
         if (this._obj) {
@@ -305,7 +311,6 @@ export class bolc__Dialog {
         break;
       default:
         alert(this.getTitle() + '\n\n' + this.getMessage());
-        break;
     }
   }
 }

@@ -1,3 +1,4 @@
+import { InitForm } from '../../class/initForm';
 import { getAlternative } from './getAlternative';
 //import { global } from '../../../global';
 
@@ -20,8 +21,8 @@ export function bol_GetFieldTitle(obj: HTMLElement): string {
 
   // Try to find an alternative name.
   s =
-    obj instanceof HTMLInputElement && window.bolSettings
-      ? getAlternative(obj.name, window.bolSettings.FieldNamesAlternative)
+    obj instanceof HTMLInputElement && InitForm.bolSettings
+      ? getAlternative(obj.name, InitForm.bolSettings.FieldNamesAlternative)
       : '';
 
   // Use the field title if no alternative name was found.

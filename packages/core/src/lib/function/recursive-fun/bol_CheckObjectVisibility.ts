@@ -8,8 +8,8 @@ export function bol_CheckObjectVisibility(obj?: any): boolean | undefined {
   if (!obj) return undefined;
 
   // If the object is a radio button, get the first element of the group
-  if (obj.type == 'radio' || obj.type == 'radiobutton')
-    obj = getField(obj.name)[0];
+ /*  if (obj.type == 'radio' || obj.type == 'radiobutton')
+    obj = getField(obj.name)[0]; */
 
   // Check if the object is hidden or has display set to none
   if (

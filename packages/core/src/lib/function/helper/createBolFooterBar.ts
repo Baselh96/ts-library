@@ -1,7 +1,8 @@
+import { bolc__Settings } from '../../class';
 import { getBol__logo } from '../../data/bol__logo';
 
 
-export function createBolFooterBar(): void {
+export function createBolFooterBar(bolSettings: bolc__Settings, bolFormVersion: string): void {
   // Create a new div element
   let myRow = document.createElement('div');
 
@@ -12,15 +13,15 @@ export function createBolFooterBar(): void {
   // Set the inner HTML of the div to a button and some text
   myRow.innerHTML =
     '<div class="col-4"><button type="button" id="bol__btn_up" class="bi-arrow-up-circle bol-bar-button" onclick="window.scrollTo(0,0);" title="' +
-    window.bolSettings.GetMsgString('btn_up_title') +
+    bolSettings.GetMsgString('btn_up_title') +
     '"></button></div>';
 
   // If there is a version number, add a div with the version number
-  if (window.bolFormVersion != '') {
+  if (bolFormVersion != '') {
     myRow.innerHTML =
       myRow.innerHTML +
       '<div class="col-4 bol-container-center"><span style="font-size: 70%;">v ' +
-      window.bolFormVersion +
+      bolFormVersion +
       '</span></div>';
   }
   // Otherwise, add a blank div

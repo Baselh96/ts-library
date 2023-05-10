@@ -1,6 +1,8 @@
 import { getCssVariable } from '../function/helper/getCssVariable';
 import { setPrecentStyleHelper } from '../function/helper/setPrecentStyleHelper';
 import { Button } from '../model/buttons.model';
+import { bolc__Settings } from './bolc-settings';
+import { bolc__Page } from './bolc__Page';
 
 /***************************************************************************************************
  * BLOCK
@@ -15,7 +17,15 @@ export class bolc__Steps {
   private _color_line: string = '';
   private _color_background: string = '';
 
-  constructor() {
+  //Is an instance of the bolSettings class, which we get as a parameter.
+  private bolSettings: bolc__Settings;
+  //Is an instance of the bolPage class, which we get as a parameter.
+  private bolPage: bolc__Page;
+
+  constructor(bolSettings: bolc__Settings, bolPage: bolc__Page) {
+    this.bolSettings = bolSettings;
+    this.bolPage = bolPage;
+
     this._color_line = getCssVariable(
       '--bol-color-stepbutton-line',
       'rgb(222, 222, 222)'
@@ -25,7 +35,7 @@ export class bolc__Steps {
       'rgb(0, 64, 128)'
     );
 
-    for (let i = 1; i < window.bolPage.max + 1; i++) {
+    for (let i = 1; i < this.bolPage.max + 1; i++) {
       this.Buttons.push(new Button(i, `Seite  ${i}`));
     }
 
@@ -133,11 +143,11 @@ export class bolc__Steps {
   }
 
   get layout(): string {
-    return window.bolSettings._StepButtonLayout;
+    return this.bolSettings._StepButtonLayout;
   }
 
   set layout(newValue: string) {
-    window.bolSettings._StepButtonLayout =
+    this.bolSettings._StepButtonLayout =
       newValue.toLowerCase() === 'pib' ? 'pib' : 'ib';
 
     this.StyleIt();
@@ -201,34 +211,34 @@ Creates the step buttons and returns a row element containing the buttons.
       btn.setAttribute('title', steptip);
 
       // Add active/inactive class and background image if applicable
-      if (window.bolPage.active == button.page) {
+      if (this.bolPage.active == button.page) {
         btn.classList.add(
-          window.bolSettings._StepButtonPosition == 'left'
+          this.bolSettings._StepButtonPosition == 'left'
             ? 'bol-stepbtn-active-left'
             : 'bol-stepbtn-active'
         );
 
-        if (window.bolSettings._StepButtonImage)
+        if (this.bolSettings._StepButtonImage)
           btn.style.backgroundImage = this.ButtonImage(true);
       } else {
         btn.classList.add(
-          window.bolSettings._StepButtonPosition == 'left'
+          this.bolSettings._StepButtonPosition == 'left'
             ? 'bol-stepbtn-inactive-left'
             : 'bol-stepbtn-inactive'
         );
 
-        if (window.bolSettings._StepButtonImage)
+        if (this.bolSettings._StepButtonImage)
           btn.style.backgroundImage = this.ButtonImage(false);
       }
 
       // Add step counter to button text if applicable
-      if (window.bolSettings._StepButtonCounter) {
+      if (this.bolSettings._StepButtonCounter) {
         btn.innerText = ' ' + button.page + '. ' + btn.innerText;
       }
 
       // Append button to column and add line break if step button position is left
       myCol.appendChild(btn);
-      if (window.bolSettings._StepButtonPosition == 'left') {
+      if (this.bolSettings._StepButtonPosition == 'left') {
         myCol.appendChild(document.createElement('br'));
       }
     });
@@ -280,7 +290,7 @@ Creates the step buttons and returns a row element containing the buttons.
         ? 'display: none;'
         : '' +
           '" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" title="' +
-          window.bolSettings.GetMsgString('progress_title') +
+          this.bolSettings.GetMsgString('progress_title') +
           '"></div></div>';
     // append the column to the row and return the row
     myRow.appendChild(myCol);
@@ -377,7 +387,7 @@ Creates the step buttons and returns a row element containing the buttons.
     }
 
     // Set the class of the element depending on the activation
-    if (window.bolSettings._StepButtonPosition === 'left') {
+    if (this.bolSettings._StepButtonPosition === 'left') {
       ele.className = isAktive
         ? 'bol-stepbtn-active-left'
         : 'bol-stepbtn-inactive-left';
@@ -386,7 +396,7 @@ Creates the step buttons and returns a row element containing the buttons.
     }
 
     // If the button image setting is enabled, set the background image of the element.
-    if (window.bolSettings._StepButtonImage) {
+    if (this.bolSettings._StepButtonImage) {
       ele.style.backgroundImage = this.ButtonImage(isAktive);
     }
 
@@ -401,7 +411,7 @@ Creates the step buttons and returns a row element containing the buttons.
 
     // Search for the button with the specified page from bolPage number
     const button = this.Buttons.find(
-      (item) => item.page === window.bolPage.active
+      (item) => item.page === this.bolPage.active
     );
 
     // If the button was found, set the attribute precent of this class on the precent of button

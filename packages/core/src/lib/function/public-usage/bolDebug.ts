@@ -1,3 +1,5 @@
+import { InitForm } from "../../class/initForm";
+
 /**
  * this method to display the messages on the console
  * @param anyStuff are the data that will be returned
@@ -6,7 +8,7 @@
  */
 export function bolDebug(anyStuff: any, msg: string): any {
     // Check if debug mode is enabled
-    if (window.bolSettings._modeDebug) {
+    if (InitForm.bolSettings._modeDebug) {
         // Output debug message to console
         console.log(msg);
     }

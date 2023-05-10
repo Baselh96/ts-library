@@ -1,3 +1,4 @@
+//TODo: Implementation
 export class bolc__Object {
   private _obj: any;
 
@@ -9,18 +10,5 @@ export class bolc__Object {
     else return false;
   }
 
-  set visible(newMode) {
-    /* switch (newMode) {
-      case 'Ja':
-      case 'ja':
-      case 'j':
-      case 'yes':
-      case true:
-      case 1:
-        this.Show();
-        break;
-      default:
-        this.Hide();
-    } */
-  }
+  set visible(newMode) {}
 }
