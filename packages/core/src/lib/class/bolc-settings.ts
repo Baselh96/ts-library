@@ -50,13 +50,13 @@ export class bolc__Settings {
 
   private _page: number = 1;
   // soll ein Seiten-Check erfolgen oder nicht
-  private _checkPage: boolean = true;
+  public _checkPage: boolean = true;
   private _CheckedPages: boolean[] = [];
-  private _usablePages: boolean[] = [];
+  public _usablePages: boolean[] = [];
   // sollen erweiterte Fehlermeldungen auf der console ausgegeben werden
   public _modeDebug: boolean = false;
   // soll mit Erreichen der letzten Seite automatisch die Zusammenfassung erzeugt werden
-  private _modeSummary: boolean = true;
+  public _modeSummary: boolean = true;
 
   public _modeJSON4Send: boolean = false;
 
@@ -72,7 +72,7 @@ export class bolc__Settings {
   // array mit Feldnamen, welche nicht auf der Zusammenfassungsseite anzuzeigen sind
   public fieldsNotInSummary: string[] = [];
   // array mit Feldnamen, welches Feld soll auf welcher Seite den Focus erhalten
-  private pageFocus: any[] = [];
+  public pageFocus: any[] = [];
   // Rueckfrage, ob Feldinhalte aus einem Feld-Container geloescht werden sollen
   private _confirmClear: boolean = true;
 

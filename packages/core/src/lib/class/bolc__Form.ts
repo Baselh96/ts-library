@@ -10,6 +10,10 @@ import { bol_getPage4Object } from '../function/recursive-fun/bol_getPage4Object
 import { bolc__Settings } from './bolc-settings';
 import { bolc__Page } from './bolc__Page';
 
+/***************************************************************************************************
+ * BLOCK
+ * Form
+***************************************************************************************************/
 export class bolc__Form {
   private _obj: HTMLFormElement | undefined;
   private _Kundenname: string = '';

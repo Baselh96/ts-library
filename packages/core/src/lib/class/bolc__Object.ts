@@ -1,8 +1,10 @@
 //TODo: Implementation
 export class bolc__Object {
-  private _obj: any;
+  public _obj: HTMLElement | null;
 
-  constructor(obj: any) {}
+  constructor(obj: HTMLElement| null) {
+    this._obj = obj;
+  }
 
   get visible() {
     if (this._obj == undefined) return false;

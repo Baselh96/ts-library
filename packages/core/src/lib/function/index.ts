@@ -1,3 +1,4 @@
+import { bolFormSave } from './form/bolFormSave';
 export { bolGetTimeStamp } from './helper/bolGetTimeStamp';
 export { bol_GetObjectType } from './field-element/bol_GetObjectType';
 export { bol_Field } from './field-element/bol_Field';
@@ -15,4 +16,9 @@ export { bol_getObjectPage } from './recursive-fun/bol_getObjectPage';
 export { bol_getPage4Object } from './recursive-fun/bol_getPage4Object';
 export { bolHide } from './objects/bolHide';
 export { bolShow } from './objects/bolShow';
+export { bolFormInit } from './form/bolFormInit';
+export { bolFormSave } from './form/bolFormSave';
+export { bolFormSend } from './form/bolFormSend';
+export { bolForm2PDF } from './form/bolForm2PDF';
+export { bolRestoreTemp } from './form/bolRestoreTemp';
 

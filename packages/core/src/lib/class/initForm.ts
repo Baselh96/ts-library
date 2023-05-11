@@ -18,6 +18,7 @@ export class InitForm {
     // set the bolFormVersion to an empty string
     InitForm.bolFormVersion = '';
 
+    //ToDo: The Variables bol__page_focus and page_focus are missing
     // create a new instance of bol__Page
     InitForm.bolPage = new bolc__Page(InitForm.bolSettings);
     //ToDo: we should enter the variables (numFields, bol__control_names, contoll_names, bol__notInSummary) in the construtor
@@ -36,7 +37,7 @@ export class InitForm {
 
     // call the StyleIt method of bolForm with bolBarStyle as an argument
     InitForm.bolForm.StyleIt(bolBarStyle);
-
+    
     InitForm.bolPage.goTo(InitForm.bolSettings.page);
   }
 }
