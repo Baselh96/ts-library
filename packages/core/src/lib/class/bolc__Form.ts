@@ -1,3 +1,8 @@
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable no-case-declarations */
 import { bolDebug, bol_GetFieldTitle } from '../function';
 import { createBolFooterBar } from '../function/helper/createBolFooterBar';
 import { FieldNotInSummary } from '../function/helper/fieldNotInSummary';
@@ -70,7 +75,7 @@ export class bolc__Form {
    * this method return a value of input with id 'Form.FormPublish#2.LocalSaveURL#4' or a empty string
    */
   get valueTemp() {
-    let e = document.getElementById(
+    const e = document.getElementById(
       'Form.FormPublish#2.LocalSaveURL#4'
     ) as HTMLInputElement;
     return e
@@ -82,7 +87,7 @@ export class bolc__Form {
    * this method return a value of input with id 'Form.FormPublish#2.TargetURL#2' or a empty string
    */
   get valueTarget(): string {
-    let e = document.getElementById(
+    const e = document.getElementById(
       'Form.FormPublish#2.TargetURL#2'
     ) as HTMLInputElement;
     return e
@@ -122,7 +127,7 @@ export class bolc__Form {
    */
   public RestoreTemp(): void {
     // Find the input element with id "act_form_saved"
-    let e = document.getElementById('act_form_saved') as HTMLInputElement;
+    const e = document.getElementById('act_form_saved') as HTMLInputElement;
 
     // If the element exists and has a value
     if (e && e.value !== '') {
@@ -178,7 +183,7 @@ export class bolc__Form {
    * @returns is the boolean value that tells whether the form was sent or not
    */
   public Send(): boolean {
-    let targetURL = this.valueTarget;
+    const targetURL = this.valueTarget;
 
     // If the target URL is empty, return false
     if (targetURL == '') return false;
@@ -418,7 +423,7 @@ export class bolc__Form {
   Summary(): boolean | undefined {
     // Get the summary container element
     // If the container is not found, try finding it in the "control_page" element
-    let cntOutput: HTMLElement | null =
+    const cntOutput: HTMLElement | null =
       document.getElementById('bolSummaryContainer') ||
       document.getElementById('control_page');
 
@@ -430,11 +435,12 @@ export class bolc__Form {
     cntOutput.innerHTML = '';
 
     // Get the page of the container
-    let page = bol_getPage4Object(cntOutput.id);
+    const page = bol_getPage4Object(cntOutput.id);
 
     // Declare and initialize ProjectOutput variable
     let ProjectOutput;
 
+    //ToDO: implement this function
     /* try {
       // Attempt to call bolProject_Summary function and store result in ProjectOutput variable
       //ToDO: implement this both functions
@@ -476,7 +482,7 @@ export class bolc__Form {
     }
 
     // Check if fields not in summary have been defined in the global script
-    let fieldsNotInSummary = this.bol__notInSummary || [];
+    const fieldsNotInSummary = this.bol__notInSummary || [];
     if (fieldsNotInSummary.length > 0) {
       this.bolSettings.fieldsNotInSummary = fieldsNotInSummary;
     }
@@ -491,8 +497,8 @@ export class bolc__Form {
     let fieldset: string = '';
     let linealternate: boolean = true;
 
+    //ToDO: implement this function
    /*  for (let i = 0; i < this.numFields; i++) {
-      //ToDO: implement this both functions
       let field = getField(getNthFieldName(i));
       let fieldset_active = '';
       
@@ -562,7 +568,7 @@ export class bolc__Form {
     switch (field.type) {
       case 'text':
       case 'textarea':
-        let fieldvalue = field.value.trim();
+        const fieldvalue = field.value.trim();
         return field.type == 'textarea'
           ? `<pre>${fieldvalue}</pre>`
           : fieldvalue;

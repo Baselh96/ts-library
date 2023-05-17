@@ -44,14 +44,14 @@ describe('class bolc__Settings', () => {
 
   it('test save-methode', () => {
     //We first find the input element which will be changed when saving.
-    let input: HTMLInputElement = document.getElementById(
+    const input: HTMLInputElement = document.getElementById(
       'bol.FormSettings'
     ) as HTMLInputElement;
 
-    let oldvalue = JSON.parse(input.value);
+    const oldvalue = JSON.parse(input.value);
     //Call the function
     instance.Save();
-    let newvalue = JSON.parse(input.value);
+    const newvalue = JSON.parse(input.value);
 
     //The length of the list in the input is longer than before saving, because some items were added.
     expect(newvalue.length > oldvalue.length).toBeTruthy();

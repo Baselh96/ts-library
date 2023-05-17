@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { getDefaultMsgStrings } from '../data/msg-string-data';
 import { ConfigString } from '../model/config-string.model';
 import { FieldError } from '../model/field-error.model';
@@ -31,9 +33,9 @@ export class bolc__Settings {
   // Auflistung der Fehlerfelder beim Check einer Seite oder eines Blocks von Feldern
   public _fdsError: FieldError[] = [];
   // Farbe fuer die Anzeige von Fehlern (Hintergrund)
-  private _colorErrorBg: string = '';
+  public _colorErrorBg: string = '';
   // Komplementaerfarbe fuer die Anzeige von Fehlern (Text)
-  private _colorErrorFg: string = '';
+  public _colorErrorFg: string = '';
 
   // soll bol Routine zum Dateiladen verwendet werden?
   private useLoad4Files: ConfigStringValue | undefined;
@@ -51,7 +53,7 @@ export class bolc__Settings {
   private _page: number = 1;
   // soll ein Seiten-Check erfolgen oder nicht
   public _checkPage: boolean = true;
-  private _CheckedPages: boolean[] = [];
+  public _CheckedPages: boolean[] = [];
   public _usablePages: boolean[] = [];
   // sollen erweiterte Fehlermeldungen auf der console ausgegeben werden
   public _modeDebug: boolean = false;
@@ -189,13 +191,13 @@ export class bolc__Settings {
     return this.getValue('DialogMode', 3);
   }
   set DialogMode(newValue: ConfigStringValue) {
-    let item: ConfigString | undefined = this.findConfigString('DialogMode');
+    const item: ConfigString | undefined = this.findConfigString('DialogMode');
     item ? item.value = newValue: this.ConfigString.push(new ConfigString('DialogMode', 3)); 
     this.Save();
   }
 
   get TimeStampSave(): ConfigStringValue {
-    let item: ConfigString | undefined = this.findConfigString('TimeStampSave');
+    const item: ConfigString | undefined = this.findConfigString('TimeStampSave');
     return item ? item.value: '';    
   }
   set TimeStampSave(newValue: ConfigStringValue) {
@@ -204,7 +206,7 @@ export class bolc__Settings {
   }
 
   get TimeStampSend(): ConfigStringValue {
-    let item: ConfigString | undefined = this.findConfigString('TimeStampSend');
+    const item: ConfigString | undefined = this.findConfigString('TimeStampSend');
     return item ? item.value: ''; 
   }
   set TimeStampSend(newValue: ConfigStringValue) {
@@ -257,7 +259,7 @@ export class bolc__Settings {
    * of div elements with Id: Page
    */
   private fillVariablePages(): void {
-    let e = document.querySelectorAll('div.row[id^=page]');
+    const e = document.querySelectorAll('div.row[id^=page]');
     this._usablePages.fill(true, 0, e.length);
     this._CheckedPages.fill(false, 0, e.length);
   }
@@ -279,7 +281,7 @@ export class bolc__Settings {
       //In the other case, we create an input and add a value to it and attach it to our form.
       input = createHTMLInput(this.FieldNameConfigJSON);
 
-      let form: HTMLCollectionOf<HTMLFormElement> =
+      const form: HTMLCollectionOf<HTMLFormElement> =
         document.getElementsByTagName('form');
 
       //Here we append the InputElement to the first shape found,
@@ -316,7 +318,7 @@ export class bolc__Settings {
     this._confirmClear = this.getValue('ModeConfirmClear', true) as boolean;
     this.useLoad4Files = this.getValue('useLoad4Files', true) as boolean;
     this.useAccept4Files = this.getValue('useAccept4Files', true) as boolean;
-    let tempFiletype: string =  this.getValue('fileTypes', '.pdf, image/jpeg') as string;
+    const tempFiletype =  this.getValue('fileTypes', '.pdf, image/jpeg') as string;
     this.fileTypes = tempFiletype !== '.pdf, image/jpeg' ? tempFiletype: this.getValue('FileExtensions', '.pdf, image/jpeg') as string;
     this.FileMaxSize = this.getValue('FileMaxSize', 2) as number;
     this._useStar4required = this.getValue('useStar4required', false) as boolean;
@@ -358,7 +360,7 @@ export class bolc__Settings {
     name: string,
     defaultValue: ConfigStringValue
   ): ConfigStringValue {
-    let item: ConfigString | undefined = this.findConfigString(name);
+    const item: ConfigString | undefined = this.findConfigString(name);
 
     return item ? item.value : defaultValue;
   }
@@ -382,7 +384,7 @@ export class bolc__Settings {
    * @param value is the new value of the item in the list
    */
   private addToConfigStrings(name: string, value: ConfigStringValue): void {
-    let item: ConfigString | undefined = this.findConfigString(name);
+    const item: ConfigString | undefined = this.findConfigString(name);
 
     item ? item.value = value: this.ConfigString.push(new ConfigString(name, value));
   }
@@ -397,7 +399,7 @@ export class bolc__Settings {
     this.addToConfigStrings('checkedPages', this._CheckedPages);
 
     //To add the ConfigStrings as a Liste to the HTMLInputElement 'FieldNameConfigJSON' 
-    let input: HTMLInputElement = document.getElementById(
+    const input: HTMLInputElement = document.getElementById(
       this.FieldNameConfigJSON
     ) as HTMLInputElement;
     if (input) input.value = JSON.stringify(this.ConfigString);
@@ -417,7 +419,7 @@ export class bolc__Settings {
 
     //we find the index on the searched element in the list and if there is not, 
     //then the value is -1
-    let index = this.Files.findIndex(item => item.fid === fieldname);
+    const index = this.Files.findIndex(item => item.fid === fieldname);
 
     switch(true) {
       // gefunden, soll aber geloescht werden

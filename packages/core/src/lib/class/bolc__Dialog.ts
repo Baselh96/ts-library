@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { Modal } from 'bootstrap';
 import { createModalDialog } from '../function/helper/createModalDialog';
 import { msgStringHelper } from '../function/helper/msgstringHelper';

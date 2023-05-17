@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { getCssVariable } from '../function/helper/getCssVariable';
 import { setPrecentStyleHelper } from '../function/helper/setPrecentStyleHelper';
 import { Button } from '../model/buttons.model';
@@ -60,7 +61,7 @@ export class bolc__Steps {
 
   set info(newValue: string) {
     this._infoText = newValue;
-    let e = document.getElementById('bolStepButtonInfo');
+    const e = document.getElementById('bolStepButtonInfo');
     if (e) e.innerText = this._infoText;
   }
 
@@ -160,10 +161,10 @@ export class bolc__Steps {
    * @returns Data-URI as backgound image
    */
   public ButtonImage(Mode: boolean): string {
-    let svg: string =
+    const svg =
       '<svg width="900" height="40" overflow="hidden" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">';
 
-    let image = `${svg}<path d="M 0,3 H 885 L 900 20 L 885 37 H 0" fill="${
+    const image = `${svg}<path d="M 0,3 H 885 L 900 20 L 885 37 H 0" fill="${
       Mode ? this._color_background : 'none'
     }" fill-rule="none" style="fill:none:fill-opacity:${
       Mode ? '1' : '10'
@@ -175,15 +176,14 @@ export class bolc__Steps {
   }
 
   /**
-
-Creates the step buttons and returns a row element containing the buttons.
-@returns A row element containing the step buttons.
-*/
+  * Creates the step buttons and returns a row element containing the buttons.
+  * @returns A row element containing the step buttons.
+  */
   public CreateButtons(): HTMLDivElement {
-    let myRow = document.createElement('div');
+    const myRow = document.createElement('div');
     myRow.className = 'row';
 
-    let myCol = document.createElement('div');
+    const myCol = document.createElement('div');
     myCol.className = 'col-lg-12 bol-stepbar';
     myCol.id = 'bolStepButtonBar';
 
@@ -195,11 +195,12 @@ Creates the step buttons and returns a row element containing the buttons.
       if (button.page === 0) return;
 
       // Get label and tooltip for button
-      let steplabel = button.label;
-      let steptip = !button.tip || button.tip == '' ? button.label : button.tip;
+      const steplabel = button.label;
+      const steptip =
+        !button.tip || button.tip == '' ? button.label : button.tip;
 
       // Create button element and set its properties
-      let btn = document.createElement('button');
+      const btn = document.createElement('button');
       btn.id = 'bol_btnStep' + button.page;
       btn.type = 'button';
       btn.value = button.page.toString();
@@ -253,11 +254,11 @@ Creates the step buttons and returns a row element containing the buttons.
    */
   public CreateInfo(): HTMLDivElement {
     //Create a div for row
-    let myRow = document.createElement('div');
+    const myRow = document.createElement('div');
     myRow.className = 'row';
 
     //Create a div for column
-    let myCol = document.createElement('div');
+    const myCol = document.createElement('div');
     myCol.className = 'col-lg-12 bol-stepbar-text';
     myCol.id = 'bolStepButtonInfo';
     myCol.innerText = this.info;
@@ -274,12 +275,12 @@ Creates the step buttons and returns a row element containing the buttons.
    */
   public CreateProgress(): HTMLDivElement {
     // create a new row
-    let myRow = document.createElement('div');
+    const myRow = document.createElement('div');
     myRow.className = 'row';
     // hide the row if the progress is zero
     if (this.percent == 0) myRow.style.display = 'none';
     // create a new column
-    let myCol = document.createElement('div');
+    const myCol = document.createElement('div');
     myCol.className = 'col-lg-12 bol-stepbar-percent';
     myCol.id = 'bolStepButtonProgress';
     // if the progress is negative, show a hidden progress bar with zero width
@@ -327,7 +328,7 @@ Creates the step buttons and returns a row element containing the buttons.
       button.visible = displayText.toLowerCase() !== 'none';
 
       // Search for the HTML element with ID "bol_btnStep" + pageNo
-      let ele = document.getElementById('bol_btnStep' + pageNo);
+      const ele = document.getElementById('bol_btnStep' + pageNo);
 
       // If the element was found, set the display to "none".
       if (ele && ele !== null) ele.style.display = displayText;
@@ -425,7 +426,7 @@ Creates the step buttons and returns a row element containing the buttons.
    */
   public StyleIt(): void {
     // get the container element
-    let cnt = document.getElementById('bolStepButtons');
+    const cnt = document.getElementById('bolStepButtons');
 
     // check if _obj and cnt exist, if not return
     if (!this._obj || !cnt) return;
@@ -434,7 +435,7 @@ Creates the step buttons and returns a row element containing the buttons.
     cnt.innerHTML = '';
 
     // create a div element with class 'col-lg-12'
-    let myColBase = document.createElement('div');
+    const myColBase = document.createElement('div');
     myColBase.className = 'col-lg-12';
 
     // add myColBase to cnt
