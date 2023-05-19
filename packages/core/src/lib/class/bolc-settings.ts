@@ -67,7 +67,7 @@ export class bolc__Settings {
   // soll ein Pflichtfeldsymbol bei Radio's angezeigt werden
   private _useRadioRequired: boolean = true;
   // soll statt Symbol ein Text mit Link zur Feldinfo angezeigt werden
-  private _useLink4Info: boolean = false;
+  public _useLink4Info: boolean = false;
 
   // array mit Feldern und alternativen Feldbezeichnungen fuer die Zusammenfassungsseite
   private _fdsAltNames: any[] = []; //ToDo
@@ -98,24 +98,24 @@ export class bolc__Settings {
   // Text des Tootltips fuer Radiofelder
   private _ttRadioRequired: string = '';
   // Text des Tootltips zur Feldinfo
-  private _ttInfo: string = '';
-  private _ttDlgInfoTitle: string = '';
+  public _ttInfo: string = '';
+  public _ttDlgInfoTitle: string = '';
 
   public FieldNameConfigJSON: string = 'bol.FormSettings';
 
   // Name von bootstrap Symbolen zur Anzeige
   //private symbol_fieldrequired: string = 'bi-star-fill';
-  private symbol_fieldrequired: string = 'bi-star';
-  private symbol_radiorequired: string = 'bi-star';
-  private symbol_fieldinfo: string = 'bi-info-circle';
+  public symbol_fieldrequired: string = 'bi-star';
+  public symbol_radiorequired: string = 'bi-star';
+  public symbol_fieldinfo: string = 'bi-info-circle';
   //private symbol_up: string = 'bi-caret-up-square';
   //private symbol_down: string = 'bi-caret-down-square-fill';
-  private symbol_up: string = 'bi-caret-up-square';
-  private symbol_down: string = 'bi-caret-down-square-fill';
-  private symbol_erase: string = 'bi-eraser-fill';
-  private symbol_check: string = 'bi-check-circle';
-  private symbol_delete: string = 'bi-trash';
-  private symbol_help: string = 'bi-question-circle-fill';
+  public symbol_up: string = 'bi-caret-up-square';
+  public symbol_down: string = 'bi-caret-down-square-fill';
+  public symbol_erase: string = 'bi-eraser-fill';
+  public symbol_check: string = 'bi-check-circle';
+  public symbol_delete: string = 'bi-trash';
+  public symbol_help: string = 'bi-question-circle-fill';
 
   private ConfigString: ConfigString[] = [];
 
