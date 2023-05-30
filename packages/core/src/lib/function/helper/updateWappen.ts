@@ -3,7 +3,7 @@
    */
   export function updateWappen(): void {
     // get the element with ID 'WAPPEN'
-    let e = document.getElementById('WAPPEN');
+    const e = document.getElementById('WAPPEN');
 
     // if the element exists
     if (e) {

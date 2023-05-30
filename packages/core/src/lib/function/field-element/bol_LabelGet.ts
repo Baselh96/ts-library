@@ -6,7 +6,7 @@
 export function bol_LabelGet(fname: string): HTMLElement | undefined {
   if (fname.length === 0) return undefined;
 
-  let element = document.querySelector(`label[for="${fname}"]`) as HTMLElement;
+  const element = document.querySelector(`label[for="${fname}"]`) as HTMLElement;
 
   return element ? element : undefined;
 }

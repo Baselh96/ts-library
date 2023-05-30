@@ -4,7 +4,7 @@ import { getBol__logo } from '../../data/bol__logo';
 
 export function createBolFooterBar(bolSettings: bolc__Settings, bolFormVersion: string): void {
   // Create a new div element
-  let myRow = document.createElement('div');
+  const myRow = document.createElement('div');
 
   // Set the class and ID of the div
   myRow.className = 'row bol-bar-row';

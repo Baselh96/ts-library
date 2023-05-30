@@ -6,7 +6,7 @@ import { getCssVariable } from '../function/helper/getCssVariable';
  */
 export function getBol__logo(): string {
   // call the function to get the value of css-variable '--bol-bar-fg'
-  let colfg: string = getCssVariable('--bol-bar-fg', '');
+  const colfg: string = getCssVariable('--bol-bar-fg', '');
 
   return (
     '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +

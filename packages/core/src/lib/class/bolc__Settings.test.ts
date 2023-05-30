@@ -1,4 +1,4 @@
-import { bolc__Settings } from './bolc-settings';
+import { bolc__Settings } from './bolc__Settings';
 
 describe('class bolc__Settings', () => {
   const instance = new bolc__Settings();

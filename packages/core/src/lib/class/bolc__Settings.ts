@@ -38,9 +38,9 @@ export class bolc__Settings {
   public _colorErrorFg: string = '';
 
   // soll bol Routine zum Dateiladen verwendet werden?
-  private useLoad4Files: ConfigStringValue | undefined;
+  public useLoad4Files: ConfigStringValue | undefined;
   // soll das HTML-Attribut accept für Dateifelder verwendet werden
-  private useAccept4Files: ConfigStringValue | undefined;
+  public useAccept4Files: ConfigStringValue | undefined;
   // zulaessige Dateierweiterungen und MIME-Types
   public fileTypes: ConfigStringValue | undefined;
   // maximale Dateigroesse in MByte
@@ -63,9 +63,9 @@ export class bolc__Settings {
   public _modeJSON4Send: boolean = false;
 
   // soll statt Symbol ein Stern fuer Pflichtfeld angezeigt werden
-  private _useStar4required: boolean = false;
+  public _useStar4required: boolean = false;
   // soll ein Pflichtfeldsymbol bei Radio's angezeigt werden
-  private _useRadioRequired: boolean = true;
+  public _useRadioRequired: boolean = true;
   // soll statt Symbol ein Text mit Link zur Feldinfo angezeigt werden
   public _useLink4Info: boolean = false;
 
@@ -94,9 +94,9 @@ export class bolc__Settings {
 
   // Texte fuer Tooltips
   // Text des Tootltips fuer Pflichtfelder
-  private _ttRequired: string = '';
+  public _ttRequired: string = '';
   // Text des Tootltips fuer Radiofelder
-  private _ttRadioRequired: string = '';
+  public _ttRadioRequired: string = '';
   // Text des Tootltips zur Feldinfo
   public _ttInfo: string = '';
   public _ttDlgInfoTitle: string = '';
@@ -127,7 +127,6 @@ export class bolc__Settings {
     this.bootstrapVersion = checkBootstrap();
 
     //Checking the variable bol__msg_strings_iso
-    //TODo: löschen von dieseFeather
     this.checkBol__msg_strings_iso(bol__msg_strings_iso);
 
     //Filling the _usablePages and _CheckedPages variables

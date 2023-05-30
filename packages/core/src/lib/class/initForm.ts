@@ -1,4 +1,4 @@
-import { bolc__Settings } from './bolc-settings';
+import { bolc__Settings } from './bolc__Settings';
 import { bolc__Dialog } from './bolc__Dialog';
 import { bolc__Form } from './bolc__Form';
 import { bolc__Steps } from './bolc__Steps';

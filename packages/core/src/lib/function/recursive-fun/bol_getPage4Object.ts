@@ -8,7 +8,7 @@ import { bol_getObjectPage } from './bol_getObjectPage';
  */
 export function bol_getPage4Object(oname: string): number {
   //to get the page-html-element
-  let p = bol_getObjectPage(document.getElementById(oname));
+  const p = bol_getObjectPage(document.getElementById(oname));
 
   //When we have the page, we take the first 4 letters and we return it
   return p || p === '' || typeof p === 'string'

@@ -1,6 +1,6 @@
 import { btnstring } from '../function/helper/btnstring';
 import { bol_MakeInfoButton } from '../function/styling/bol_MakeInfoButton';
-import { bolc__Settings } from './bolc-settings';
+import { bolc__Settings } from './bolc__Settings';
 
 /***************************************************************************************************
  * BLOCK

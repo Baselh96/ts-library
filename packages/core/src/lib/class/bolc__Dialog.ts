@@ -3,7 +3,7 @@ import { Modal } from 'bootstrap';
 import { createModalDialog } from '../function/helper/createModalDialog';
 import { msgStringHelper } from '../function/helper/msgstringHelper';
 import { MsgString } from '../model/msg-string.model';
-import { bolc__Settings } from './bolc-settings';
+import { bolc__Settings } from './bolc__Settings';
 
 /***************************************************************************************************
  * Dialog

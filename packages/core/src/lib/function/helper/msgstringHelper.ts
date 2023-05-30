@@ -17,7 +17,7 @@ export function msgStringHelper(
   msgRegplace1?: string,
   msgRegplace2?: string
 ): string {
-  let msg: MsgString | undefined =
+  const msg: MsgString | undefined =
     MsgStrings.find((msg) => msg.msgid == key && msg.msglng == formLanguage) ||
     MsgStrings.find((msg) => msg.msgid == key && msg.msglng == 'de') ||
     MsgStrings.find((msg) => msg.msgid == key);

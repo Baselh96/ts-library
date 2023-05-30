@@ -1,5 +1,5 @@
 
-export * from "./bolc-settings";
+export * from "./bolc__Settings";
 export * from "./bolc__Dialog";
 export * from "./bolc__Steps";
 export * from "./bolc__Form";

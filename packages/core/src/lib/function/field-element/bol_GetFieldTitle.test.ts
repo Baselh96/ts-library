@@ -1,4 +1,4 @@
-import { bolc__Settings } from '../../class/bolc-settings';
+import { bolc__Settings } from '../../class/bolc__Settings';
 import { InitForm } from '../../class/initForm';
 import { bol_GetFieldTitle } from './bol_GetFieldTitle';
 

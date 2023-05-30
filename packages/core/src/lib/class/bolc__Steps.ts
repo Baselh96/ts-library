@@ -2,7 +2,7 @@
 import { getCssVariable } from '../function/helper/getCssVariable';
 import { setPrecentStyleHelper } from '../function/helper/setPrecentStyleHelper';
 import { Button } from '../model/buttons.model';
-import { bolc__Settings } from './bolc-settings';
+import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
 
 /***************************************************************************************************
