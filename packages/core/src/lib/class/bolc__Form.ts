@@ -18,7 +18,7 @@ import { FieldNotInSummary } from '../function/helper/fieldNotInSummary';
 /***************************************************************************************************
  * BLOCK
  * Form
-***************************************************************************************************/
+ ***************************************************************************************************/
 export class bolc__Form {
   private _obj?: HTMLFormElement;
   private _Kundenname: string = '';
@@ -192,7 +192,7 @@ export class bolc__Form {
       if (field) {
         (field as HTMLInputElement | RadioNodeList).value = JSON.stringify(
           (field as HTMLInputElement | RadioNodeList).value
-        )
+        );
       }
     }
 
@@ -486,7 +486,7 @@ export class bolc__Form {
     for (let i = 0; i < (this.numFields? this.numFields : 0); i++) {
       let field = getField(this.getNthFieldName? this.getNthFieldName(i) : '');
       let fieldset_active = '';
-      
+
       if (!field) continue;
       // if it should not appear in the summary, check for this class
       if (FieldNotInSummary(field as HTMLElement, this.bolSettings)) continue;

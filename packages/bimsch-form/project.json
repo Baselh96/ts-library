@@ -1,0 +1,77 @@
+{
+  "name": "bimsch-form",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "packages/bimsch-form/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/packages/bimsch-form",
+        "compiler": "babel",
+        "main": "packages/bimsch-form/src/main.ts",
+        "tsConfig": "packages/bimsch-form/tsconfig.app.json",
+        "webpackConfig": "packages/bimsch-form/webpack.config.js",
+        "assets": [
+          "packages/bimsch-form/src/favicon.ico",
+          "packages/bimsch-form/src/assets"
+        ],
+        "index": "packages/bimsch-form/src/index.html",
+        "baseHref": "/",
+        "styles": ["packages/bimsch-form/src/styles.css"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "fileReplacements": [
+            {
+              "replace": "packages/bimsch-form/src/environments/environment.ts",
+              "with": "packages/bimsch-form/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/webpack:dev-server",
+      "options": {
+        "buildTarget": "bimsch-form:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "bimsch-form:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/bimsch-form/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/bimsch-form/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  }
+}
