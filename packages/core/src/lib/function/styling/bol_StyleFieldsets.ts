@@ -4,7 +4,10 @@ import { InitForm } from '../../class/initForm';
  * This function is used to style fieldsets within a specific block or the entire page
  * @param BlockOfFields is the name for the element which has fieldsets elements as block and which should be changed
  */
-export function bol_StyleFieldsets(BlockOfFields?: string): void {
+export function bol_StyleFieldsets(
+  BlockOfFields?: string,
+  bolProject_Refresh?: (id: string, fs_id?: string) => void
+): void {
   // Get the fields based on the block identifier or the entire page
   const fields =
     !BlockOfFields || BlockOfFields === ''
@@ -24,6 +27,6 @@ export function bol_StyleFieldsets(BlockOfFields?: string): void {
     // Set the fieldset element as the object
     fs._obj = fslist[i] as HTMLElement;
     // Apply the styling to the fieldset using the StyleIt method
-    fs.StyleIt();
+    fs.StyleIt(bolProject_Refresh);
   }
 }

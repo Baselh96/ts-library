@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@nrwl/webpack": "^15.5.2",
     "bootstrap": "^5.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

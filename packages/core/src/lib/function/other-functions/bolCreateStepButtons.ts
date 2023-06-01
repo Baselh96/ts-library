@@ -24,5 +24,5 @@ export function bolCreateStepButtons(Pages: number[], InfoText: string): void {
   });
 
   // Set the info text
-  InitForm.bolSteps._infoText = InfoText ?? '';
+  InitForm.bolSteps._infoText = InfoText ? InfoText : '';
 }

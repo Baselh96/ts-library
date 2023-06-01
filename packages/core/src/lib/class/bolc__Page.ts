@@ -16,6 +16,8 @@ export class bolc__Page {
 
   constructor(
     bolSettings: bolc__Settings,
+    public bolProject_DoSomethingOnPage?: (aktivePage: number) => void,
+    public bolProject_CheckPageBeforeLeave?: (aktivePage: number) => boolean,
     public bol__page_focus?: any[],
     public page_focus?: any[]
   ) {
@@ -81,8 +83,8 @@ export class bolc__Page {
     // Update the step indicator
     InitForm.bolSteps.Update(oldPgNo, this.active);
 
-    // ToDo: implement the function bolProject_DoSomethingOnPage
-    /* try {await bolProject_DoSomethingOnPage(this.active)} catch(err) {} */
+    if (this.bolProject_DoSomethingOnPage)
+      this.bolProject_DoSomethingOnPage(this.active);
 
     // Check and update the page focus
     this.checkPageFocus();
@@ -120,12 +122,13 @@ export class bolc__Page {
    * this method is used to go to the next page
    */
   public Next(): Promise<number> | number | boolean {
-    //ToDo: impelementation of function bolProject_CheckPageBeforeLeave
     // Call the custom function to check if it's okay to leave the current page
-    /* let customResult: boolean = bolProject_CheckPageBeforeLeave(this.active);
-    
+    const customResult = this.bolProject_CheckPageBeforeLeave
+      ? this.bolProject_CheckPageBeforeLeave(this.active)
+      : false;
+
     // If the custom function returns false, do not allow the user to proceed
-    if (!customResult) return false; */
+    if (!customResult) return false;
 
     // If the current page fails validation, do not proceed to the next page and return the current page number
     if (!this.Check()) return this.active;
@@ -195,14 +198,15 @@ export class bolc__Page {
     }
 
     try {
-      //ToDo: Implement the function bolProject_CheckPageBeforeLeave
       // Check the result of the custom function bolProject_CheckPageBeforeLeave
-      /* const customResult = bolProject_CheckPageBeforeLeave(this.active);
+      const customResult = this.bolProject_CheckPageBeforeLeave
+        ? this.bolProject_CheckPageBeforeLeave(this.active)
+        : false;
 
       // If the custom result is false, return the current active page
-      if (customResult === false) {
+      if (!customResult) {
         return this.active;
-      } */
+      }
     } catch (err) {
       // Handle any errors thrown by bolProject_CheckPageBeforeLeave
     }

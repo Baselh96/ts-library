@@ -1,7 +1,11 @@
 import { bolc__Fieldset } from '../../class/bolc__Fieldset';
 import { InitForm } from '../../class/initForm';
+import { bol_getObjectPage } from '../recursive-fun/bol_getObjectPage';
 
-export function bolFieldsetToggle(Button: HTMLButtonElement) {
+export function bolFieldsetToggle(
+  Button: HTMLButtonElement,
+  bolProject_Refresh?: (id: string, fs_id?: string) => void
+) {
   // Extract the fieldset ID from the button's ID
   const fs_id = Button.id.substring(Button.id.indexOf('.') + 1);
 
@@ -13,8 +17,6 @@ export function bolFieldsetToggle(Button: HTMLButtonElement) {
 
   const e = document.getElementById(fs_id + '.inner');
 
-  //ToDo Implement bolProject_Refresh
-  /* try {
-    bolProject_Refresh(bol_getObjectPage(e).id.substring(4));
-  } catch (err) {} */
+  if (bolProject_Refresh)
+    bolProject_Refresh((bol_getObjectPage(e) as HTMLElement).id.substring(4));
 }

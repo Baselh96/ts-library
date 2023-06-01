@@ -1,4 +1,7 @@
 import { bolc__Settings } from '../../class';
+import { bolFieldsetCheck } from '../fieldset/bolFieldsetCheck';
+import { bolFieldsetToggle } from '../fieldset/bolFieldsetToggle';
+import { bolFieldsetTogglePart } from '../fieldset/bolFieldsetTogglePart';
 
 /**
  * This method is used to create and configure a button element based on the provided type and name
@@ -9,7 +12,8 @@ import { bolc__Settings } from '../../class';
 export function btnstring(
   bolSettings: bolc__Settings,
   btype: string,
-  bname: string
+  bname: string,
+  bolProject_Refresh?: (id: string, fs_id?: string) => void
 ): HTMLButtonElement {
   // Create a new button element
   const btn = document.createElement('button');
@@ -27,8 +31,10 @@ export function btnstring(
         bolSettings.symbol_up,
         'down',
         bname,
-        'fieldset_btn_togglepart',
-        'bolFieldsetTogglePart(this);'
+        'fieldset_btn_togglepart'
+      );
+      btn.addEventListener('onclick', () =>
+        bolFieldsetTogglePart(btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-down':
@@ -39,8 +45,10 @@ export function btnstring(
         bolSettings.symbol_down,
         'up',
         bname,
-        'fieldset_btn_toggle',
-        'bolFieldsetToggle(this);'
+        'fieldset_btn_toggle'
+      );
+      btn.addEventListener('onclick', () =>
+        bolFieldsetToggle(btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-erase':
@@ -51,8 +59,10 @@ export function btnstring(
         bolSettings.symbol_erase,
         '',
         bname,
-        'fieldset_btn_check',
-        'bolFieldsetCheck(this);'
+        'fieldset_btn_check'
+      );
+      btn.addEventListener('onclick', () =>
+        bolFieldsetCheck(btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-check':
@@ -63,8 +73,10 @@ export function btnstring(
         bolSettings.symbol_check,
         '',
         bname,
-        'fieldset_btn_check',
-        'bolFieldsetCheck(this);'
+        'fieldset_btn_check'
+      );
+      btn.addEventListener('onclick', () =>
+        bolFieldsetCheck(btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-toggle':
@@ -75,8 +87,10 @@ export function btnstring(
         bolSettings.symbol_up,
         'down',
         bname,
-        'fieldset_btn_toggle',
-        'bolFieldsetToggle(this);'
+        'fieldset_btn_toggle'
+      );
+      btn.addEventListener('onclick', () =>
+        bolFieldsetToggle(btn, bolProject_Refresh)
       );
       break;
   }
@@ -90,7 +104,6 @@ export function btnstring(
  * @param value is the value to set for the button
  * @param bName is the name to use for the button's ID
  * @param msgString is the name to use for the button's ID
- * @param evntFun is the event function to assign to the button's onclick attribute.
  */
 function editButton(
   bolSettings: bolc__Settings,
@@ -98,8 +111,7 @@ function editButton(
   bClass: string,
   value: string,
   bName: string,
-  msgString: string,
-  evntFun: string
+  msgString: string
 ): void {
   // Add the specified CSS class to the button
   btn.classList.add(bClass);
@@ -109,9 +121,6 @@ function editButton(
 
   // Set the title attribute of the button using the provided message string
   btn.title = bolSettings.GetMsgString(msgString);
-
-  // Set the onclick event attribute of the button to the provided event function
-  btn.setAttribute('onclick', evntFun);
 
   // Set the value of the button
   btn.value = value;

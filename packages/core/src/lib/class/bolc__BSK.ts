@@ -8,11 +8,9 @@ import { InitForm } from './initForm';
 export class bolc__BSK {
   private authenticated?: boolean;
   private localStoreHeader?: string;
-  private numFields = 0;
   private bol__SKFieldMapping: any;
 
-  constructor(numFields: number, bol__SKFieldMapping: any, public getNthFieldName: (n: number) => string) {
-    this.numFields = numFields;
+  constructor(bol__SKFieldMapping: any, public getNthFieldName: (n: number) => string) {
     this.bol__SKFieldMapping = bol__SKFieldMapping;
 
     // Retrieve the form type element
@@ -38,13 +36,13 @@ export class bolc__BSK {
     }
   }
 
-  RunSK_KAAW() {
+  RunSK_KAAW(numFields?: number) {
     const url =
       '/NetFiller?_ID_=' +
       (getField('NetFillerConfiguration') as HTMLInputsType).value +
       '&sendRedirect=true&htmlValue=';
 
-    this.constructUrl(url);
+    this.constructUrl(url, numFields? numFields : 0);
   }
 
   /**
@@ -52,25 +50,25 @@ export class bolc__BSK {
    * If running locally (file://), saves form field values to the local store and reloads the page.
    * Otherwise, if the serviceURL parameter is provided, constructs the URL and opens it in the current window.
    */
-  public Run(serviceURL?: string): void {
+  public Run(serviceURL?: string, numFields?: number): void {
     // If running locally (file://)
     if (location.href.indexOf('file://') >= 0) {
       // Save form field values to the local store
-      this.LocalStoreSave();
+      this.LocalStoreSave(numFields? numFields : 0);
       // Reload the page
       window.location.reload();
     } else {
       // If serviceURL is not provided, return
       if (serviceURL == undefined) return;
 
-      this.constructUrl(serviceURL);
+      this.constructUrl(serviceURL, numFields? numFields : 0);
     }
   }
 
   /**
    * Constructs the URL and opens it in the current window
    */
-  private constructUrl(urlPart: string): void {
+  private constructUrl(urlPart: string, numFields: number): void {
     // Get the base URL from the form field
     let url = (getField('Form.FormPublish#2.NetFillerURL#7') as HTMLInputsType)
       .value;
@@ -83,7 +81,7 @@ export class bolc__BSK {
     // If the URL is not empty
     if (url != '') {
       // Save form field values to the local store
-      this.LocalStoreSave();
+      this.LocalStoreSave(numFields);
       // Open the URL in the current window
       window.open(url, '_self');
     }
@@ -115,10 +113,10 @@ export class bolc__BSK {
    * Retrieves the field names and values, and stores them in the local store.
    * Also stores the active page in the local store.
    */
-  LocalStoreSave() {
+  LocalStoreSave(numFields: number) {
     const fieldlist = [];
 
-    for (let i = 0; i < this.numFields; i++) {
+    for (let i = 0; i < numFields; i++) {
       // Get the field
       const field = getField(this.getNthFieldName(i)) as HTMLInputsType;
 

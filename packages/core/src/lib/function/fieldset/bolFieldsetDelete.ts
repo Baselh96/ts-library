@@ -1,4 +1,9 @@
-export function bolFieldsetDelete(Button: HTMLButtonElement): void {
+import { bol_getObjectPage } from '../recursive-fun/bol_getObjectPage';
+
+export function bolFieldsetDelete(
+  Button: HTMLButtonElement,
+  bolProject_Clear?: (id: string, fs_id?: string) => void
+): void {
   // Extract the fieldset ID from the button's ID
   const fs_id = Button.id.substring(Button.id.indexOf('.') + 1);
 
@@ -10,8 +15,9 @@ export function bolFieldsetDelete(Button: HTMLButtonElement): void {
 
   e.parentNode?.removeChild(e);
 
-  //ToDo: Implement bolProject_Clear
-  /* try {
-    bolProject_Clear(bol_getObjectPage(e).id.substring(4), fs_id);
-  } catch (err) {} */
+  if (bolProject_Clear)
+    bolProject_Clear(
+      (bol_getObjectPage(e) as HTMLElement).id.substring(4),
+      fs_id
+    );
 }

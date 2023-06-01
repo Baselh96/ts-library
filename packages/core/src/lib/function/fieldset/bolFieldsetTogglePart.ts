@@ -1,5 +1,8 @@
-import { bolFieldsetToggle } from "./bolFieldsetToggle";
+import { bolFieldsetToggle } from './bolFieldsetToggle';
 
-export function bolFieldsetTogglePart(Button: HTMLButtonElement) {
-    bolFieldsetToggle(Button);
+export function bolFieldsetTogglePart(
+  Button: HTMLButtonElement,
+  bolProject_Refresh?: (id: string, fs_id?: string) => void
+) {
+  bolFieldsetToggle(Button, bolProject_Refresh);
 }
