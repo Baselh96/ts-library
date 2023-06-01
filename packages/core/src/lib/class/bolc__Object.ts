@@ -18,11 +18,12 @@ import { HTMLRequired } from '../function/helper/htmlRequired';
 import { HTMLInfo } from '../function/helper/htmlInfo';
 import { HTMLRequiredRadio } from '../function/helper/htmlRequiredRadio';
 import { HTMLInputsType } from '../type/htmlInputsType';
+import { getField } from '../function/other-functions/getField';
 
 export class bolc__Object {
-  public _obj: HTMLInputsType | undefined;
-  public _label: HTMLElement | undefined = undefined;
-  public type: string | undefined | null = '';
+  public _obj?: HTMLInputsType;
+  public _label?: HTMLElement;
+  public type?: string | null = '';
   public radioName: string = '';
 
   constructor(obj?: HTMLInputsType) {
@@ -79,15 +80,17 @@ export class bolc__Object {
   }
 
   get isEmpty(): boolean | undefined {
-    if (!this._obj) return false;
+    if (!this._obj) return undefined;
 
     switch (this.type) {
       case 'checkbox':
         return (this._obj as HTMLInputElement).checked;
       case 'radio':
-        //ToDo: Implementation of Function getField
-        /* if (getField(this.name).value.trim() == '')  */
-        return true;
+        // eslint-disable-next-line no-case-declarations
+        const field = getField(this.name);
+        if (!field) return false;
+
+        return (field as HTMLInputElement | RadioNodeList).value.trim() == '';
       case 'text':
       case 'password':
       case 'textarea':
@@ -236,8 +239,10 @@ export class bolc__Object {
 
     // Determine the value string based on the input type
     if (this.type === 'radio') {
-      //TODo: Implementation of function getField
-      valString = /* getField(this.radioName).value */ '';
+      const field = getField(this.radioName);
+      valString = field
+        ? (field as HTMLInputElement | RadioNodeList).value.trim()
+        : '';
     } else {
       valString = this._obj.value.trim();
     }
@@ -267,9 +272,12 @@ export class bolc__Object {
     if (this.type === 'radio') {
       // For radio buttons, use the radioName as the field name
       fieldName = this.radioName.replace('.', '_');
-      //TODo: Implementation of function getField
-      fieldValue =
-        /* JSON.stringify(getField(this.radioName).value.trim()) */ '';
+      const field = getField(this.radioName);
+      fieldValue = field
+        ? JSON.stringify(
+            (field as HTMLInputElement | RadioNodeList).value.trim()
+          )
+        : '';
     } else {
       // For other input types, use the name of the object as the field name
       fieldName = this._obj.name.replace('.', '_');
@@ -296,8 +304,10 @@ export class bolc__Object {
     if (this.type === 'radio') {
       // For radio buttons, use the radioName as the field name
       fieldName = this.radioName.replace('.', '_');
-      //TODo: Implementation of function getField
-      fieldValue = /* getField(this.radioName).value.trim() */ '';
+      const field = getField(this.radioName);
+      fieldValue = field
+        ? (field as HTMLInputElement | RadioNodeList).value.trim()
+        : '';
     } else {
       // For other input types, use the name of the object as the field name
       fieldName = this._obj.name.replace('.', '_');
@@ -318,11 +328,8 @@ export class bolc__Object {
     // Replace "_" with "." in the key
     const skey = key.replace('_', '.');
 
-    //ToDo: Implementation of getField
     // Get the corresponding HTML input field
-    const field = /* getField(skey) */ document.getElementById(
-      skey
-    ) as HTMLInputsType;
+    const field = getField(skey) as HTMLInputElement;
 
     if (field.type) {
       if (field.type.substring(0, 5) == 'radio') {
@@ -523,7 +530,6 @@ export class bolc__Object {
     }
   }
 
-
   public StyleIt() {
     // Skip styling for undefined objects, hidden elements, and elements with "bol-nolabel" class
     if (
@@ -548,45 +554,12 @@ export class bolc__Object {
             'accept',
             InitForm.bolSettings.fileTypes as string
           );
-      // Fallthrough intentional
+        this.styleOtherTypes();
+        break;
       case 'text':
       case 'textarea':
       case 'select':
-        // eslint-disable-next-line no-case-declarations
-        let texts = {
-          textlabel: '',
-          texttooltip: '',
-          texthelp: '',
-        };
-
-        if (this._label) {
-          texts = SplitEformsTitle(this._label.innerText);
-        } else if (
-          (this._obj?.parentNode as Element)?.className
-            .toLowerCase()
-            .indexOf('infieldlabel') !== -1
-        ) {
-          texts = this._obj.getAttribute('bolTitle')
-            ? SplitEformsTitle(this._obj.getAttribute('bolTitle') || '')
-            : SplitEformsTitle(this._obj.title);
-
-          if (!this._obj.getAttribute('bolTitle'))
-            this._obj.setAttribute('bolTitle', this._obj.title);
-
-          this._label = document.createElement('label');
-          this._label.setAttribute('for', this._obj.id);
-          this._obj.parentNode?.appendChild(this._label);
-        }
-
-        if (this._label) {
-          if (texts.textlabel.length != 0)
-            this._label.innerHTML = texts.textlabel;
-          if (texts.texttooltip.length != 0)
-            this._obj.title = texts.texttooltip;
-          if (this._obj.required) HTMLRequired(this._label);
-          if (texts.texthelp.length != 0) HTMLInfo(this._label, texts.texthelp);
-        }
-
+        this.styleOtherTypes();
         break;
     }
   }
@@ -627,6 +600,51 @@ export class bolc__Object {
       if (texts.texthelp != '') {
         HTMLInfo(spanElements[0] as HTMLElement, texts.texthelp);
       }
+    }
+  }
+
+  /**
+   * This method performs styling logic for elements of types other than checkbox, radio,
+   * file, text, textarea, and select
+   */
+  private styleOtherTypes(): void {
+    if (!this._obj) return; // If the element is not present, exit the function.
+
+    let texts = {
+      textlabel: '',
+      texttooltip: '',
+      texthelp: '',
+    };
+
+    // Check if there is a label associated with the element
+    if (this._label) {
+      texts = SplitEformsTitle(this._label.innerText);
+    } else if (
+      // Check if the element's parent has the class "infieldlabel"
+      (this._obj?.parentNode as Element)?.className
+        .toLowerCase()
+        .indexOf('infieldlabel') !== -1
+    ) {
+      texts = this._obj.getAttribute('bolTitle')
+        ? SplitEformsTitle(this._obj.getAttribute('bolTitle') || '')
+        : SplitEformsTitle(this._obj.title);
+
+      // Set bolTitle attribute if it doesn't exist
+      if (!this._obj.getAttribute('bolTitle'))
+        this._obj.setAttribute('bolTitle', this._obj.title);
+
+      // Create a new label element and associate it with the element using "for" attribute
+      this._label = document.createElement('label');
+      this._label.setAttribute('for', this._obj.id);
+      this._obj.parentNode?.appendChild(this._label);
+    }
+
+    if (this._label) {
+      // Apply styling based on the extracted text properties
+      if (texts.textlabel.length !== 0) this._label.innerHTML = texts.textlabel;
+      if (texts.texttooltip.length !== 0) this._obj.title = texts.texttooltip;
+      if (this._obj.required) HTMLRequired(this._label);
+      if (texts.texthelp.length !== 0) HTMLInfo(this._label, texts.texthelp);
     }
   }
 }

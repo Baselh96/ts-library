@@ -3,6 +3,7 @@ import { InitForm } from '../../class/initForm';
 import { FieldError } from '../../model/field-error.model';
 import { HTMLInputsType } from '../../type/htmlInputsType';
 import { clearInputError } from '../other-functions/clearInputError';
+import { getField } from '../other-functions/getField';
 import { InputError } from '../other-functions/inputError';
 import { bol_CheckObjectVisibility } from '../recursive-fun/bol_CheckObjectVisibility';
 import { radioCheckboxHandler } from './radioCheckboxHandler';
@@ -35,10 +36,11 @@ export function checkFields(fields: NodeListOf<Element>): void {
     } else radiogrp = '';
 
     switch (obj.type) {
-      case 'radio':
-        // ToDo: Implement the getField function and call radioCheckboxHandler accordingly
-        // radioCheckboxHandler(this.getField(radiogrp).value == '', obj, true);
+      case 'radio': {
+        const field = getField(radiogrp) as RadioNodeList;
+        if (field) radioCheckboxHandler(field.value == '', obj, true);
         break;
+      }
       case 'checkbox':
         // Call radioCheckboxHandler for checkboxes
         radioCheckboxHandler(

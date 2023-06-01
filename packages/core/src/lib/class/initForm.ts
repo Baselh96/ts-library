@@ -3,6 +3,10 @@ import { bolc__Dialog } from './bolc__Dialog';
 import { bolc__Form } from './bolc__Form';
 import { bolc__Steps } from './bolc__Steps';
 import { bolc__Page } from './bolc__Page';
+import { bol_StylePages } from '../function/styling/bol_StylePages';
+import { bol_StyleFieldsets } from '../function/styling/bol_StyleFieldsets';
+import { bol_StyleFields } from '../function/styling/bol_StyleFields';
+import { bolc__BSK } from './bolc__BSK';
 
 export class InitForm {
   public static bolSettings: bolc__Settings;
@@ -10,6 +14,7 @@ export class InitForm {
   public static bolPage: bolc__Page;
   public static bolDialog: bolc__Dialog;
   public static bolSteps: bolc__Steps;
+  public static bolBSK: bolc__BSK;
   public static bolFormVersion: string;
 
   public static init(bolBarStyle: boolean) {
@@ -37,6 +42,9 @@ export class InitForm {
 
     // call the StyleIt method of bolForm with bolBarStyle as an argument
     InitForm.bolForm.StyleIt(bolBarStyle);
+    bol_StylePages();
+    bol_StyleFieldsets();
+    bol_StyleFields();
     
     InitForm.bolPage.goTo(InitForm.bolSettings.page);
   }

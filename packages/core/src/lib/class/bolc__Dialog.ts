@@ -10,7 +10,7 @@ import { bolc__Settings } from './bolc__Settings';
  ***************************************************************************************************/
 export class bolc__Dialog {
   //is the dialog-modal
-  private _obj: Modal | undefined;
+  private _obj?: Modal;
 
   private bol__project_strings: MsgString[];
 

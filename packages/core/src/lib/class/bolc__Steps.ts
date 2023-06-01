@@ -10,9 +10,9 @@ import { bolc__Page } from './bolc__Page';
  * step buttons, progress bar
  ***************************************************************************************************/
 export class bolc__Steps {
-  private _obj: HTMLElement | undefined;
-  private Buttons: Button[] = [];
-  private _infoText: string = '';
+  private _obj?: HTMLElement;
+  public Buttons: Button[] = [];
+  public _infoText: string = '';
   private _percent: number = 10;
   private _percentStyle: string = 'basic';
   private _color_line: string = '';

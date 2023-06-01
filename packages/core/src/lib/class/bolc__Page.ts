@@ -3,6 +3,8 @@ import { bol_BlockCheck } from '../function/helper/bol_BlockCheck';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Object } from './bolc__Object';
 import { InitForm } from './initForm';
+import { getField } from '../function/other-functions/getField';
+import { HTMLInputsType } from '../type/htmlInputsType';
 
 /***************************************************************************************************
  * BLOCK
@@ -273,13 +275,10 @@ export class bolc__Page {
 
     // Iterate over each field
     fields.forEach((field) => {
-      //TODo: Implementation of function getField
-      /* const f: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement =
-        getField(field.name);
+      const f = getField(field.name) as HTMLInputsType;
       if (!f) return;
 
-      const fname = f.id ? f.id : f.name; */
-      const fname = '';
+      const fname = f.id ? f.id : f.name;
 
       // Skip fields starting with 'js_' and fields that have already been processed
       if (

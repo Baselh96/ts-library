@@ -3,25 +3,24 @@
 /* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-case-declarations */
-import { bolDebug, bol_GetFieldTitle } from '../function';
+import { bolDebug, bol_GetFieldTitle, bol_getFieldsetLegend } from '../function';
 import { createBolFooterBar } from '../function/helper/createBolFooterBar';
-import { FieldNotInSummary } from '../function/helper/fieldNotInSummary';
 import { generatePdfDisplayUrl } from '../function/helper/generatePdfDisplayUrl';
 import { updateWappen } from '../function/helper/updateWappen';
 import { bolHide } from '../function/objects/bolHide';
 import { bolShow } from '../function/objects/bolShow';
-import { bol_getFieldsetLegend } from '../function/recursive-fun/bol_getFieldsetLegend';
 import { bol_getPage4Object } from '../function/recursive-fun/bol_getPage4Object';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
 import { getField } from '../function/other-functions/getField';
+import { FieldNotInSummary } from '../function/helper/fieldNotInSummary';
 
 /***************************************************************************************************
  * BLOCK
  * Form
 ***************************************************************************************************/
 export class bolc__Form {
-  private _obj: HTMLFormElement | undefined;
+  private _obj?: HTMLFormElement;
   private _Kundenname: string = '';
   private _Kundenstrasse: string = '';
   private _KundenPLZ: string = '';
@@ -493,20 +492,20 @@ export class bolc__Form {
    * this method creates the HTML code for all fields on the summary page and returns it as a string.
    * @returns is the HTML code as string
    */
-  public getStringOutput(): string {
+  private getStringOutput(): string {
     let stringOutput: string = '';
     let fieldset: string = '';
     let linealternate: boolean = true;
 
-    //ToDO: implement this function
-   /*  for (let i = 0; i < this.numFields; i++) {
-      let field = getField(getNthFieldName(i));
+    //ToDO: implement this function getNthFieldName
+    for (let i = 0; i < this.numFields; i++) {
+      let field = getField(/* getNthFieldName(i) */ '');
       let fieldset_active = '';
       
       if (!field) continue;
       // if it should not appear in the summary, check for this class
-      if (FieldNotInSummary(field, this.bolSettings)) continue;
-      if (field.id == this.bolSettings.FieldNameConfigJSON) continue;
+      if (FieldNotInSummary(field as HTMLElement, this.bolSettings)) continue;
+      if ((field as HTMLElement).id == this.bolSettings.FieldNameConfigJSON) continue;
       
       //To get the value of the field
       let fieldvalue = this.getFieldValue(field);
@@ -523,13 +522,13 @@ export class bolc__Form {
       }
 
       stringOutput += this.createRow(
-        bol_GetFieldTitle(field),
+        bol_GetFieldTitle(field as HTMLElement),
         fieldvalue,
         !linealternate
       );
 
       linealternate = !linealternate;
-    } */
+    }
     return stringOutput;
   }
 
