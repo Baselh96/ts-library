@@ -12,6 +12,7 @@ export class InitForm {
   public static bolSteps: bolc__Steps;
   public static bolFormVersion: string;
 
+  // TODO: ADD doSomethingOnPage and checkPageBeforeLeave and bolProject_Summary as params to constructor
   public static init(bolBarStyle: boolean) {
     // create a new instance of bolc__Settings
     InitForm.bolSettings = new bolc__Settings();
@@ -37,7 +38,7 @@ export class InitForm {
 
     // call the StyleIt method of bolForm with bolBarStyle as an argument
     InitForm.bolForm.StyleIt(bolBarStyle);
-    
+
     InitForm.bolPage.goTo(InitForm.bolSettings.page);
   }
 }

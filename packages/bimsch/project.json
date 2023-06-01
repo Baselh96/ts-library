@@ -2,7 +2,7 @@
   "name": "bimsch",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/bimsch/src",
-  "projectType": "library",
+  "projectType": "web",
   "targets": {
     "build": {
       "executor": "@nrwl/esbuild:esbuild",
@@ -19,7 +19,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/bimsch/**/*.js"]
+        "lintFilePatterns": ["packages/bimsch/**/*.ts"]
       }
     }
   },

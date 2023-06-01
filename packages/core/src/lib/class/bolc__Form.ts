@@ -19,7 +19,7 @@ import { getField } from '../function/other-functions/getField';
 /***************************************************************************************************
  * BLOCK
  * Form
-***************************************************************************************************/
+ ***************************************************************************************************/
 export class bolc__Form {
   private _obj: HTMLFormElement | undefined;
   private _Kundenname: string = '';
@@ -124,6 +124,7 @@ export class bolc__Form {
   /**
    * This method resets the input html element with the id 'act_form_saved'.
    */
+  // TODO: Here we can just add bolProject_RestoreFromTemp as param
   public RestoreTemp(): void {
     // Find the input element with id "act_form_saved"
     const e = document.getElementById('act_form_saved') as HTMLInputElement;
@@ -148,6 +149,7 @@ export class bolc__Form {
    * before submitting the form
    * @returns is the boolean value for the success or failure of saving
    */
+  // TODO: Pass bolProject_SaveForTemp as argument
   public SaveTemp(): boolean {
     // Check if there is a value for valueTemp, if not return false
     if (this.valueTemp === '') return false;
@@ -200,7 +202,7 @@ export class bolc__Form {
       if (field) {
         (field as HTMLInputElement | RadioNodeList).value = JSON.stringify(
           (field as HTMLInputElement | RadioNodeList).value
-        )
+        );
       }
     }
 
@@ -499,15 +501,15 @@ export class bolc__Form {
     let linealternate: boolean = true;
 
     //ToDO: implement this function
-   /*  for (let i = 0; i < this.numFields; i++) {
+    /*  for (let i = 0; i < this.numFields; i++) {
       let field = getField(getNthFieldName(i));
       let fieldset_active = '';
-      
+
       if (!field) continue;
       // if it should not appear in the summary, check for this class
       if (FieldNotInSummary(field, this.bolSettings)) continue;
       if (field.id == this.bolSettings.FieldNameConfigJSON) continue;
-      
+
       //To get the value of the field
       let fieldvalue = this.getFieldValue(field);
 
