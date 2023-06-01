@@ -1,6 +1,6 @@
 import { bolDebug } from '../function';
 import { bol_BlockCheck } from '../function/helper/bol_BlockCheck';
-import { bolc__Settings } from './bolc-settings';
+import { bolc__Settings } from './bolc__Settings';
 import { bolc__Object } from './bolc__Object';
 import { InitForm } from './initForm';
 

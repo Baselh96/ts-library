@@ -12,8 +12,7 @@ export function bol_getFieldsetLegend(obj: any): string {
 
   // If obj is a fieldset, get the first legend element within it and return its inner text.
   if (obj.tagName == 'FIELDSET') {
-    var lgd = (obj as HTMLElement).querySelector('legend');
-    return lgd?.innerText || '';
+    return (obj as HTMLElement).querySelector('legend')?.innerText || '';
   } else {
     return bol_getFieldsetLegend(obj.parentNode);
   }

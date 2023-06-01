@@ -12,8 +12,9 @@ import { bolHide } from '../function/objects/bolHide';
 import { bolShow } from '../function/objects/bolShow';
 import { bol_getFieldsetLegend } from '../function/recursive-fun/bol_getFieldsetLegend';
 import { bol_getPage4Object } from '../function/recursive-fun/bol_getPage4Object';
-import { bolc__Settings } from './bolc-settings';
+import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
+import { getField } from '../function/other-functions/getField';
 
 /***************************************************************************************************
  * BLOCK
@@ -25,14 +26,12 @@ export class bolc__Form {
   private _Kundenstrasse: string = '';
   private _KundenPLZ: string = '';
   private _Kundenort: string = '';
-  private _KundenPerson: string = '';
   private _Kundentelefon: string = '';
   private _Kundenmail: string = '';
   private _Impressum_Link: string = '';
   private _Kontakt_Link: string = '';
   private _DSGVO_Link: string = '';
   private _SidebarText: string = '';
-  private _PageCheck: any[] = []; //ToDo: we should change the datatype
   private numFields: number;
 
   //Is an instance of the bolSettings class, which we get as a parameter.
@@ -197,10 +196,12 @@ export class bolc__Form {
     // Check if the form mode is set to JSON
     if (this.bolSettings._modeJSON4Send) {
       // If it is, convert the config JSON to a string and update the field value
-      //TODO: implement this function
-      /* getField(this.bolSettings.FieldNameConfigJSON).value = JSON.stringify(
-        getField(this.bolSettings.FieldNameConfigJSON).value
-      ); */
+      const field = getField(this.bolSettings.FieldNameConfigJSON);
+      if (field) {
+        (field as HTMLInputElement | RadioNodeList).value = JSON.stringify(
+          (field as HTMLInputElement | RadioNodeList).value
+        )
+      }
     }
 
     // Submit the form to the target URL with no validation

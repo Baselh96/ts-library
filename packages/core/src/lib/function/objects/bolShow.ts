@@ -1,9 +1,11 @@
-import { bolc__Object } from "../../class/bolc__Object";
+import { bolc__Object } from '../../class/bolc__Object';
+import { HTMLInputsType } from '../../type/htmlInputsType';
 
 /**
- * this method shows the HTML_element with the passed objId. 
+ * this method shows the HTML_element with the passed objId.
  * @param objId is the id for the element to be displayed.
  */
 export function bolShow(objId: string) {
-    (new bolc__Object(document.getElementById(objId))).visible = true;
+  const ele = document.getElementById(objId);
+  if (ele) new bolc__Object(ele as HTMLInputsType).visible = true;
 }

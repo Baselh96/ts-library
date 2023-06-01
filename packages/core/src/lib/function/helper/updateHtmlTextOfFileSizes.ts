@@ -5,6 +5,6 @@
  */
 export function updateHtmlTextOfFileSizes(newValue: string): void {
   //if a field exists to output the total size of uploads => delete content
-  let e = document.getElementById('bol.FileSizes');
+  const e = document.getElementById('bol.FileSizes');
   if (e) e.innerText = newValue;
 }

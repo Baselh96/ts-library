@@ -5,7 +5,7 @@ import { ConfigString } from '../../model/config-string.model';
  * @returns is an HTMLInputElement
  */
 export function createHTMLInput(id: string): HTMLInputElement {
-  let tempInput = document.createElement('input');
+  const tempInput = document.createElement('input');
   tempInput.id = id;
   tempInput.className = 'form-control';
   tempInput.type = 'hidden';

@@ -3,7 +3,7 @@
  * @returns date in the format YYYYMMDDHHmmss
  */
 export function bolGetTimeStamp(): string {
-  let d = new Date();
+  const d = new Date();
   return (
     d.getFullYear() +
     (d.getMonth() + 1).toString().padStart(2, '0') +
