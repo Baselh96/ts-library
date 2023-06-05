@@ -119,7 +119,12 @@ export class bolc__Settings {
 
   private ConfigString: ConfigString[] = [];
 
-  constructor(private bol__msg_strings_iso?: any[], public bol__control_names?: any[], public contoll_names?: any[]) {
+  constructor(
+    private configJson: any,
+    private bol__msg_strings_iso?: any[],
+    public bol__control_names?: any[],
+    public contoll_names?: any[]
+  ) {
     //to initialize the default values
     this.MsgStrings = getDefaultMsgStrings();
 
@@ -133,7 +138,7 @@ export class bolc__Settings {
     this.fillVariablePages();
 
     //Call load method
-    this.Load();
+    this.Load(configJson);
   }
 
   //Setter and getter for the variables
@@ -165,19 +170,19 @@ export class bolc__Settings {
     return this._CheckedPages[this.page - 1];
   }
   set PageChecked(newValue: boolean) {
-      this._CheckedPages[this.page - 1] = newValue;
-      this.Save();
+    this._CheckedPages[this.page - 1] = newValue;
+    this.Save();
   }
 
   getPageChecked(pgNo: number) {
     return this._CheckedPages[pgNo - 1];
   }
   setPageChecked(pgNo: number, newValue: boolean) {
-      this._CheckedPages[pgNo - 1] = newValue;
+    this._CheckedPages[pgNo - 1] = newValue;
   }
 
   get SKauthentication(): boolean {
-    return this.findConfigString('SKauthentication') ? true: false;
+    return this.findConfigString('SKauthentication') ? true : false;
   }
   set SKauthentication(newValue: boolean) {
     if (newValue) {
@@ -191,13 +196,16 @@ export class bolc__Settings {
   }
   set DialogMode(newValue: ConfigStringValue) {
     const item: ConfigString | undefined = this.findConfigString('DialogMode');
-    item ? item.value = newValue: this.ConfigString.push(new ConfigString('DialogMode', 3)); 
+    item
+      ? (item.value = newValue)
+      : this.ConfigString.push(new ConfigString('DialogMode', 3));
     this.Save();
   }
 
   get TimeStampSave(): ConfigStringValue {
-    const item: ConfigString | undefined = this.findConfigString('TimeStampSave');
-    return item ? item.value: '';    
+    const item: ConfigString | undefined =
+      this.findConfigString('TimeStampSave');
+    return item ? item.value : '';
   }
   set TimeStampSave(newValue: ConfigStringValue) {
     this.addToConfigStrings('TimeStampSave', bolGetTimeStamp());
@@ -205,8 +213,9 @@ export class bolc__Settings {
   }
 
   get TimeStampSend(): ConfigStringValue {
-    const item: ConfigString | undefined = this.findConfigString('TimeStampSend');
-    return item ? item.value: ''; 
+    const item: ConfigString | undefined =
+      this.findConfigString('TimeStampSend');
+    return item ? item.value : '';
   }
   set TimeStampSend(newValue: ConfigStringValue) {
     this.addToConfigStrings('TimeStampSend', bolGetTimeStamp());
@@ -220,7 +229,7 @@ export class bolc__Settings {
       try {
         arf = this.bol__control_names;
       } catch (err) {} // Version 1.x
-      
+
       if (arf) {
         this._fdsAltNames = arf;
       } else {
@@ -230,17 +239,16 @@ export class bolc__Settings {
         if (arf) this._fdsAltNames = arf;
       }
     }
-    
+
     return this._fdsAltNames;
   }
   set FieldNamesAlternative(newValue: any[]) {
-      this._fdsAltNames = newValue;
+    this._fdsAltNames = newValue;
   }
 
   get language(): string {
     return this._formLanguage;
   }
-  
 
   /**
    * this method checks if the file 'bol__msg_strings_iso' were loaded using tags.
@@ -267,27 +275,31 @@ export class bolc__Settings {
    * Load a configuration from the hidden INPUT and
    * if not existing, create it
    */
-  public Load(): void {
+  public Load(configJson: any): void {
     // Herewith we search for the HTML-ELement
     let input: HTMLInputElement | undefined = document.getElementById(
       this.FieldNameConfigJSON
     ) as HTMLInputElement;
 
-    if (input && input.value != '') {
-      //If the HTMLInputElement exists and its value is not empty, then we assign its value to variable ConfigString
-      this.ConfigString = JSON.parse(input.value);
+    if (configJson != undefined) {
+      this.ConfigString = configJson;
     } else {
-      //In the other case, we create an input and add a value to it and attach it to our form.
-      input = createHTMLInput(this.FieldNameConfigJSON);
-
-      const form: HTMLCollectionOf<HTMLFormElement> =
-        document.getElementsByTagName('form');
-
-      //Here we append the InputElement to the first shape found,
-      //if there is at least one shape found
-      if (form && form.length !== 0) {
-        form[0].appendChild(input);
+      if (input && input.value != '') {
+        //If the HTMLInputElement exists and its value is not empty, then we assign its value to variable ConfigString
         this.ConfigString = JSON.parse(input.value);
+      } else {
+        //In the other case, we create an input and add a value to it and attach it to our form.
+        input = createHTMLInput(this.FieldNameConfigJSON);
+
+        const form: HTMLCollectionOf<HTMLFormElement> =
+          document.getElementsByTagName('form');
+
+        //Here we append the InputElement to the first shape found,
+        //if there is at least one shape found
+        if (form && form.length !== 0) {
+          form[0].appendChild(input);
+          this.ConfigString = JSON.parse(input.value);
+        }
       }
     }
 
@@ -317,32 +329,71 @@ export class bolc__Settings {
     this._confirmClear = this.getValue('ModeConfirmClear', true) as boolean;
     this.useLoad4Files = this.getValue('useLoad4Files', true) as boolean;
     this.useAccept4Files = this.getValue('useAccept4Files', true) as boolean;
-    const tempFiletype =  this.getValue('fileTypes', '.pdf, image/jpeg') as string;
-    this.fileTypes = tempFiletype !== '.pdf, image/jpeg' ? tempFiletype: this.getValue('FileExtensions', '.pdf, image/jpeg') as string;
+    const tempFiletype = this.getValue(
+      'fileTypes',
+      '.pdf, image/jpeg'
+    ) as string;
+    this.fileTypes =
+      tempFiletype !== '.pdf, image/jpeg'
+        ? tempFiletype
+        : (this.getValue('FileExtensions', '.pdf, image/jpeg') as string);
     this.FileMaxSize = this.getValue('FileMaxSize', 2) as number;
-    this._useStar4required = this.getValue('useStar4required', false) as boolean;
+    this._useStar4required = this.getValue(
+      'useStar4required',
+      false
+    ) as boolean;
     this._useRadioRequired = this.getValue('useRadioRequired', true) as boolean;
     this._useLink4Info = this.getValue('useInfoLink', false) as boolean;
     this._StepButtonImage = this.getValue('StepButtonImage', true) as boolean;
-    this._StepButtonCounter = this.getValue('StepButtonCounter', false) as boolean;
+    this._StepButtonCounter = this.getValue(
+      'StepButtonCounter',
+      false
+    ) as boolean;
     this._StepButtonLayout = this.getValue('StepButtonLayout', 'ib') as string;
-    this._StepButtonPosition = this.getValue('StepButtonPosition', 'to') as string;
-    this.symbol_fieldrequired = this.getValue('symbol_fieldrequired', 'bi-star') as string;
-    this.symbol_radiorequired = this.getValue('symbol_radiorequired', 'bi-star') as string;
-    this.symbol_fieldinfo = this.getValue('symbol_fieldinfo', 'bi-info-circle-fill') as string;
+    this._StepButtonPosition = this.getValue(
+      'StepButtonPosition',
+      'to'
+    ) as string;
+    this.symbol_fieldrequired = this.getValue(
+      'symbol_fieldrequired',
+      'bi-star'
+    ) as string;
+    this.symbol_radiorequired = this.getValue(
+      'symbol_radiorequired',
+      'bi-star'
+    ) as string;
+    this.symbol_fieldinfo = this.getValue(
+      'symbol_fieldinfo',
+      'bi-info-circle-fill'
+    ) as string;
     this.symbol_up = this.getValue('symbol_up', 'bi-caret-up-square') as string;
-    this.symbol_down = this.getValue('symbol_down', 'bi-caret-down-square-fill') as string;
-    this.symbol_erase = this.getValue('symbol_erase', 'bi-eraser-fill') as string;
-    this.symbol_check = this.getValue('symbol_check', 'bi-check-circle') as string;
+    this.symbol_down = this.getValue(
+      'symbol_down',
+      'bi-caret-down-square-fill'
+    ) as string;
+    this.symbol_erase = this.getValue(
+      'symbol_erase',
+      'bi-eraser-fill'
+    ) as string;
+    this.symbol_check = this.getValue(
+      'symbol_check',
+      'bi-check-circle'
+    ) as string;
     this.symbol_delete = this.getValue('symbol_delete', 'bi-trash') as string;
-    this.symbol_help = this.getValue('symbol_help', 'bi-question-circle-fill') as string;
-    this.symbol_radiorequired = this.getValue('active_page_number', 1) as string;
+    this.symbol_help = this.getValue(
+      'symbol_help',
+      'bi-question-circle-fill'
+    ) as string;
+    this.symbol_radiorequired = this.getValue(
+      'active_page_number',
+      1
+    ) as string;
 
     //To fill some styling stuff
-    this._ttRequired = this.GetMsgString("tip_fd_required");
-    this._ttRadioRequired = this.GetMsgString("tip_fd_radiorequired");
-    this._ttInfo = this.GetMsgString("tip_fd_info");
-    this._ttDlgInfoTitle = this.GetMsgString("tip_fd_infotitle");
+    this._ttRequired = this.GetMsgString('tip_fd_required');
+    this._ttRadioRequired = this.GetMsgString('tip_fd_radiorequired');
+    this._ttInfo = this.GetMsgString('tip_fd_info');
+    this._ttDlgInfoTitle = this.GetMsgString('tip_fd_infotitle');
     this._colorErrorBg = getCssVariable('--bol-color-fielderror-bg', '#DF0044');
     this._colorErrorFg = getCssVariable('--bol-color-fielderror-fg', '#white');
   }
@@ -351,7 +402,7 @@ export class bolc__Settings {
    * This method checks whether there is an item in the ConfigString list matching the name passed.
    * If yes, then the value of the found item is returned.
    * If no, then the passed default value is returned.
-   * @param name is the name of the string in configString list 
+   * @param name is the name of the string in configString list
    * @param defaultValue is the default value of variable, if it does not exist in the list
    * @returns is the value of the variable for which this method is called
    */
@@ -366,10 +417,10 @@ export class bolc__Settings {
 
   /**
    * this method searches for a matching ELement in configString list and returns it
-   * @param name is the name of the string in configString list 
+   * @param name is the name of the string in configString list
    * @returns is the first element found in configString list
    */
-  private findConfigString(name: string): ConfigString | undefined  {
+  private findConfigString(name: string): ConfigString | undefined {
     return this.ConfigString.find(
       (item) => item.id.toLowerCase() === name.toLowerCase()
     );
@@ -385,7 +436,9 @@ export class bolc__Settings {
   private addToConfigStrings(name: string, value: ConfigStringValue): void {
     const item: ConfigString | undefined = this.findConfigString(name);
 
-    item ? item.value = value: this.ConfigString.push(new ConfigString(name, value));
+    item
+      ? (item.value = value)
+      : this.ConfigString.push(new ConfigString(name, value));
   }
 
   /**
@@ -397,7 +450,7 @@ export class bolc__Settings {
     this.addToConfigStrings('usablePages', this._usablePages);
     this.addToConfigStrings('checkedPages', this._CheckedPages);
 
-    //To add the ConfigStrings as a Liste to the HTMLInputElement 'FieldNameConfigJSON' 
+    //To add the ConfigStrings as a Liste to the HTMLInputElement 'FieldNameConfigJSON'
     const input: HTMLInputElement = document.getElementById(
       this.FieldNameConfigJSON
     ) as HTMLInputElement;
@@ -416,11 +469,11 @@ export class bolc__Settings {
 
     if (fieldname == undefined) return;
 
-    //we find the index on the searched element in the list and if there is not, 
+    //we find the index on the searched element in the list and if there is not,
     //then the value is -1
-    const index = this.Files.findIndex(item => item.fid === fieldname);
+    const index = this.Files.findIndex((item) => item.fid === fieldname);
 
-    switch(true) {
+    switch (true) {
       // gefunden, soll aber geloescht werden
       case index > -1 && filename == undefined: {
         this.Files.splice(index, 1);
@@ -441,22 +494,32 @@ export class bolc__Settings {
 
     //To update the FileSize
     this.FileSizes = 0;
-    this.Files.forEach(file => this.FileSizes += file.fsize);
+    this.Files.forEach((file) => (this.FileSizes += file.fsize));
     this.FileSizes = parseFloat((this.FileSizes / 1024 / 1024).toFixed(2));
 
     //to update view of total size
-    updateHtmlTextOfFileSizes(this.FileSizes + " MByte");
+    updateHtmlTextOfFileSizes(this.FileSizes + ' MByte');
   }
 
   /**
-   * this method searches in the MsgStrings list for a message with id "key" 
+   * this method searches in the MsgStrings list for a message with id "key"
    * and returns its content
    * @param key is the searched MsgId
    * @param msgRegplace1 is the first placeholder
    * @param msgRegplace2 is the second placeholder
    * @returns MessageContent of found Message
    */
-  public GetMsgString(key: string, msgRegplace1?: string, msgRegplace2?: string): string {
-    return msgStringHelper(key, this.MsgStrings, this._formLanguage, msgRegplace1, msgRegplace2);
+  public GetMsgString(
+    key: string,
+    msgRegplace1?: string,
+    msgRegplace2?: string
+  ): string {
+    return msgStringHelper(
+      key,
+      this.MsgStrings,
+      this._formLanguage,
+      msgRegplace1,
+      msgRegplace2
+    );
   }
 }
