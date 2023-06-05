@@ -21,3 +21,6 @@ export { bolFormSend } from './form/bolFormSend';
 export { bolForm2PDF } from './form/bolForm2PDF';
 export { bolRestoreTemp } from './form/bolRestoreTemp';
 export { bol_CalcDate } from './dateAndTime/bol_CalcDate';
+export { bolURLParameter } from './helper/bolURLParameter';
+export { setText2Label } from './helper/setText2Label';
+export { bolGetDateD } from './dateAndTime/bolGetDateD';

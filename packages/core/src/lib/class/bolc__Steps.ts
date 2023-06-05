@@ -1,9 +1,19 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { getCssVariable } from '../function/helper/getCssVariable';
 import { setPrecentStyleHelper } from '../function/helper/setPrecentStyleHelper';
-import { Button } from '../model/buttons.model';
+// TODO: Can probably remove
+// import { Button } from '../model/buttons.model';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
+
+interface IButton {
+  lang: string;
+  page: number;
+  visible: true;
+  percent: number;
+  label: string;
+  tip?: string;
+}
 
 /***************************************************************************************************
  * BLOCK
@@ -11,7 +21,7 @@ import { bolc__Page } from './bolc__Page';
  ***************************************************************************************************/
 export class bolc__Steps {
   private _obj: HTMLElement | undefined;
-  private Buttons: Button[] = [];
+  public Buttons: IButton[] = [];
   private _infoText: string = '';
   private _percent: number = 10;
   private _percentStyle: string = 'basic';
@@ -37,7 +47,13 @@ export class bolc__Steps {
     );
 
     for (let i = 1; i < this.bolPage.max + 1; i++) {
-      this.Buttons.push(new Button(i, `Seite  ${i}`));
+      this.Buttons.push({
+        lang: 'de',
+        page: i,
+        visible: true,
+        percent: 0,
+        label: `Seite  ${i}`,
+      });
     }
 
     // Search for the element with the ID "bol.StepButtonBar".
@@ -176,9 +192,9 @@ export class bolc__Steps {
   }
 
   /**
-  * Creates the step buttons and returns a row element containing the buttons.
-  * @returns A row element containing the step buttons.
-  */
+   * Creates the step buttons and returns a row element containing the buttons.
+   * @returns A row element containing the step buttons.
+   */
   public CreateButtons(): HTMLDivElement {
     const myRow = document.createElement('div');
     myRow.className = 'row';

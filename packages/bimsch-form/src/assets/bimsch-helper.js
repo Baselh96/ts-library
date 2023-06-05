@@ -8,8 +8,8 @@
 function setSaveData(newValue) {
     if (newValue != undefined) {
         if (newValue) getField("fgMetaData.saveData").value = "1"; else getField("fgMetaData.saveData").value = "0";
-    } else if (getField("Formular.Datenspeicherung").checked) getField("fgMetaData.saveData").value = '1'; else getField("fgMetaData.saveData").value = '0';        
-    if (getField("fgMetaData.saveData").value == '1') {getField("Formular.Datenspeicherung").checked = true; bolShow("btnSave")} 
+    } else if (getField("Formular.Datenspeicherung").checked) getField("fgMetaData.saveData").value = '1'; else getField("fgMetaData.saveData").value = '0';
+    if (getField("fgMetaData.saveData").value == '1') {getField("Formular.Datenspeicherung").checked = true; bolShow("btnSave")}
     else {getField("Formular.Datenspeicherung").checked = false; bolHide("btnSave")}
 }
 
@@ -53,7 +53,7 @@ function SendForm(submissionType) {
     } else return;
 
     bolDialog.ShowInfo("Datenübertragung", "Die Daten des Formulars werden übertragen!");
-    bolSendForm("btnSend");  
+    bolSendForm("btnSend");
 }
 
 
@@ -70,7 +70,7 @@ function mapField(sourceValue, destinationFieldName, destinationFieldReadonly) {
     {try {f = getField(destinationFieldName)} catch(err) {}}
     if (f == undefined) return;
     if (sourceValue == undefined) sourceValue = "";
-    getField(destinationFieldName).value = sourceValue; 
+    getField(destinationFieldName).value = sourceValue;
     if (destinationFieldReadonly) getField(destinationFieldName).readonly = true; else getField(destinationFieldName).readonly = false;
 }
 
@@ -104,7 +104,7 @@ function MapAccount() {
     }
     let md, s, s2, lockMode;
     if (BImSch_FormMode == "portalOpen" || BImSch_FormMode == "portalNew") {
-        if (md_FormData == undefined || md_FormData.length == 0) return;   
+        if (md_FormData == undefined || md_FormData.length == 0) return;
         md = md_FormData;
         lockMode = true;
     } else {
@@ -118,13 +118,13 @@ function MapAccount() {
     {try {s = md.account.funktion} catch(err) {}} mapField(s, "account.funktion", lockMode);
     {try {s = md.account.contactNr} catch(err) {}} mapField(s, "account.contactNr", lockMode);
     {try {s = md.account.email} catch(err) {}} mapField(s, "account.email", lockMode);
-    {try {s = md.account.elsterTest} catch(err) {}} 
-    if (s == undefined || s == false) SetELSTERtest(false); else SetELSTERtest(true); 
+    {try {s = md.account.elsterTest} catch(err) {}}
+    if (s == undefined || s == false) SetELSTERtest(false); else SetELSTERtest(true);
 
-    {try {s = md.formId} catch(err) {}} 
+    {try {s = md.formId} catch(err) {}}
     if (s != undefined) {
         {try {s2 = md.processId} catch(err) {}}
-        if (s2 != undefined) SetText2Label("bol.txtInternalNr", s + " / " + s2);  
+        if (s2 != undefined) SetText2Label("bol.txtInternalNr", s + " / " + s2);
         else SetText2Label("bol.txtInternalNr", undefined);
     } else SetText2Label("bol.txtInternalNr", undefined);
 }
@@ -141,7 +141,7 @@ function MapOperator() {
         lockMode = true;
         md = md_FormData;
     }
-    if (md_FormData == undefined || md_FormData.length == 0) return;   
+    if (md_FormData == undefined || md_FormData.length == 0) return;
 
     {try {s = md.operator.id} catch(err) {}} mapField(s, "operator.id", lockMode);
     {try {s = md.operator.name} catch(err) {}} mapField(s, "operator.name", lockMode);
@@ -189,7 +189,7 @@ function listAddOption(code, text) {
     // if text is empty, use code for value and text
     if (text != undefined && text != "") option.text = text; else option.text = code;
     option.value = code;
-    return option; 
+    return option;
 }
 function listGetShortText(listname) {
     let lb = getField(listname);
@@ -261,7 +261,7 @@ async function loadList_CombustionPlantTypes(listname) {
     if (md_CombustionPlantTypes.length == 0) {
         if (BImSch_FormMode != "local") await svcData_CombustionPlantTypes();
         else _local_CombustionPlantTypes();
-    }    
+    }
     if (md_CombustionPlantTypes.length == 0) return;
     let lb = document.getElementById(listname);
     if (lb == undefined) return;
@@ -307,8 +307,8 @@ function dlgPerson(fname) {
         e.role = "dialog";
         e.setAttribute("aria-hidden", "true");
         document.body.children[0].appendChild(e);
-    }  
-    // build the content of the dialog on-the-fly 
+    }
+    // build the content of the dialog on-the-fly
     let s = "";
     s = s + '<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">';
     s = s + '<div class="modal-content" style="background-color: rgb(240,240,240)">';
@@ -325,7 +325,7 @@ function dlgPerson(fname) {
     s = s + '<button type="button" class="btn cc-button" data-dismiss="modal" data-bs-dismiss="modal" onclick="dlgPersonCancel(`' + fname + '`);">abbrechen</button>';
     s = s + '</div></div></div>';
     e.innerHTML = s;
-    let dlg = new bootstrap.Modal(e); 
+    let dlg = new bootstrap.Modal(e);
     // fill the person list
     loadList_Persons("dlgListContact");
     dlg.show();
@@ -334,7 +334,7 @@ function dlgPerson(fname) {
 /***************************************************************************************
  * @name		dlgPersonClose
  * @summary		maps the selected content after closing the dialog to the destination fields
- * @param		{string}	fname	name or id of the source/destination field. 
+ * @param		{string}	fname	name or id of the source/destination field.
  * @returns		nothing
 ***************************************************************************************/
 function dlgPersonClose(fname) {
@@ -355,7 +355,7 @@ function dlgPersonClose(fname) {
 /***************************************************************************************
  * @name		dlgPersonCancel
  * @summary		set the focus to the calling button
- * @param		{string}	fname	name or id of the source/destination button. 
+ * @param		{string}	fname	name or id of the source/destination button.
  * @returns		nothing
 ***************************************************************************************/
 function dlgPersonCancel(fname) {
@@ -410,7 +410,7 @@ function lookupNACE(fieldOfCode, fieldOfText) {
 /***************************************************************************************
  * @name		filterNACE
  * @summary		function used by dlgNACE to filter the content of the listbox
- *              looks for any part of the string 
+ *              looks for any part of the string
  * @param		{string}	listname	name or id of listbox
  * @param		{string}	filtername	name or id of field where the filter value is enterd
  * @returns		nothing
@@ -445,8 +445,8 @@ function dlgNACE(fname) {
         e.role = "dialog";
         e.setAttribute("aria-hidden", "true");
         document.body.children[0].appendChild(e);
-    }        
-    // build the content of the dialog on-the-fly  
+    }
+    // build the content of the dialog on-the-fly
     let s = "";
     s = s + '<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">';
     s = s + '<div class="modal-content" style="background-color: rgb(240,240,240)">';
@@ -463,17 +463,17 @@ function dlgNACE(fname) {
     s = s + '<button type="button" class="btn cc-button" data-dismiss="modal" data-bs-dismiss="modal" onclick="dlgNACECancel(`' + fname + '`);">abbrechen</button>';
     s = s + '</div></div></div>';
     e.innerHTML = s;
-    let dlg = new bootstrap.Modal(e); 
+    let dlg = new bootstrap.Modal(e);
     // fill the listbox with NACE values
     loadList_NACE("dlgListNACE");
-    dlg.show();    
+    dlg.show();
     // set the focus to filter input field
     document.getElementById("filter.NACE").focus();
 }
 /***************************************************************************************
  * @name		dlgNACEClose
  * @summary		maps the selected content after closing the dialog to the destination fields
- * @param		{string}	fname	name or id of the source/destination field. 
+ * @param		{string}	fname	name or id of the source/destination field.
  * @returns		nothing
 ***************************************************************************************/
 function dlgNACEClose(fname) {
@@ -488,7 +488,7 @@ function dlgNACEClose(fname) {
 /***************************************************************************************
  * @name		dlgNACECancel
  * @summary		set the focus to the calling button
- * @param		{string}	fname	name or id of the source/destination button. 
+ * @param		{string}	fname	name or id of the source/destination button.
  * @returns		nothing
 ***************************************************************************************/
 function dlgNACECancel() {
@@ -500,7 +500,7 @@ async function loadList_EmissionControlSystems(listname) {
     if (md_EmissionControlSystems.length == 0) {
         if (BImSch_FormMode != 0) await svcData_EmissionControlSystems();
         else _local_EmissionControlSystems();
-    } 
+    }
     if (md_EmissionControlSystems.length == 0) return;
     let lb = document.getElementById(listname);
     if (lb == undefined) return;
@@ -517,12 +517,12 @@ function dlgEmissionControlSystems() {
         e.role = "dialog";
         e.setAttribute("aria-hidden", "true");
         document.body.children[0].appendChild(e);
-    }         
+    }
     let s = '<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">' +
     '  <div class="modal-content"><div id="bolDialogHeader" class="modal-header bol-dialog-header">' +
     '    <h5 class="modal-title" id="bolDialogTitle"> Abgasreinigungseinrichtung(en) auswählen</h5><button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close" style="color: white;">x</button>' +
     '    </div><div class="modal-body" id="bolDialogMessage" style="margin: 5px;background-color: rgb(240, 240, 240);">' +
-    '      <div class="row" style="margin: 5px;background-color: rgb(240, 240, 240);"><div class="col-12">' + 
+    '      <div class="row" style="margin: 5px;background-color: rgb(240, 240, 240);"><div class="col-12">' +
     '          Wählen Sie die Art der Abgasreinigungseinrichtung(en) aus *<br>' +
     '          <span  style="vertical-align: middle; font-size: 0.7em;">(Mehrfachauswahl möglich durch STRG+Klick bzw. STRG+Leertaste.) </span>' +
     '        <select class="listbox form-control" id="list.EmissionControlSystems" title="EmissionControlSystems" size="8" multiple="" onchange="MakeValues_EmissionControlSystems();"></select>' +
@@ -533,9 +533,9 @@ function dlgEmissionControlSystems() {
     '<button type="button" class="btn cc-button " data-dismiss="modal" data-bs-dismiss="modal" onclick="dlgEmissionControlSystemsClose();">übernehmen</button>'+
     '<button type="button" class="btn cc-button" data-dismiss="modal" data-bs-dismiss="modal" onclick="document.getElementById(`btnEmissionControl`).focus();">abbrechen</button></div></div></div>';
     e.innerHTML = s;
-    let dlg = new bootstrap.Modal(e); 
+    let dlg = new bootstrap.Modal(e);
     loadList_EmissionControlSystems("list.EmissionControlSystems");
-    if (dlg != undefined) dlg.show();    
+    if (dlg != undefined) dlg.show();
     document.getElementById("list.EmissionControlSystems").focus();
 }
 function MakeValues_EmissionControlSystems() {
