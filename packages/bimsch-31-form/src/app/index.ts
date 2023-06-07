@@ -1,5 +1,6 @@
 import { loadForm31_1 } from './bimsch-map31';
 import { bolFormInit } from '@formular-js/core';
+
 // define settings for this form
 const formSettings = [
   { id: 'active_page_number', value: 1 },

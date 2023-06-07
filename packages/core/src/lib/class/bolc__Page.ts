@@ -2,7 +2,7 @@ import { bolDebug } from '../function';
 import { bol_BlockCheck } from '../function/helper/bol_BlockCheck';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Object } from './bolc__Object';
-import { InitForm } from './initForm';
+import { bolc__Steps } from './bolc__Steps';
 
 /***************************************************************************************************
  * BLOCK
@@ -11,13 +11,19 @@ import { InitForm } from './initForm';
 export class bolc__Page {
   //Is an instance of the Settings class, which we get as a parameter in the configuration.
   private bolSettings: bolc__Settings;
+  public max: number;
+  // private bolSteps: bolc__Steps;
+  // private bolForm: bolc__Form;
+  // private bolDialog: bolc__Dialog;
 
   constructor(
     bolSettings: bolc__Settings,
+    public bolSteps: bolc__Steps,
     public bol__page_focus?: any[],
     public page_focus?: any[]
   ) {
     this.bolSettings = bolSettings;
+    this.max = bolc__Page.max;
   }
 
   get active(): number {
@@ -28,7 +34,7 @@ export class bolc__Page {
     this.bolSettings.page = pageNumber;
   }
 
-  get max(): number {
+  static get max(): number {
     const e = document.querySelectorAll('div.row[id^=page]');
     return e ? e.length : 0;
   }
@@ -77,10 +83,10 @@ export class bolc__Page {
     this.Show();
 
     // Update the step indicator
-    InitForm.bolSteps.Update(oldPgNo, this.active);
+    this.bolSteps.Update(oldPgNo, this.active);
 
     // ToDo: implement the function bolProject_DoSomethingOnPage
-    /* try {await bolProject_DoSomethingOnPage(this.active)} catch(err) {} */
+    /* try {await bolProject_DoSomethingOnPage(this.active, this.bolPage, this.bolDialog)} catch(err) {} */
 
     // Check and update the page focus
     this.checkPageFocus();
@@ -121,7 +127,7 @@ export class bolc__Page {
     //ToDo: impelementation of function bolProject_CheckPageBeforeLeave
     // Call the custom function to check if it's okay to leave the current page
     /* let customResult: boolean = bolProject_CheckPageBeforeLeave(this.active);
-    
+
     // If the custom function returns false, do not allow the user to proceed
     if (!customResult) return false; */
 
@@ -210,20 +216,20 @@ export class bolc__Page {
       return this.active;
     }
 
-    if (InitForm.bolSettings._checkPage) {
+    if (this.bolSettings._checkPage) {
       // If _checkPage is true, validate the checked pages
       for (let i = this.active; i < pgNo; i++) {
-        if (!InitForm.bolSettings._usablePages[i - 1]) {
+        if (!this.bolSettings._usablePages[i - 1]) {
           continue;
         }
-        if (!InitForm.bolSettings._CheckedPages[i - 1]) {
-          InitForm.bolDialog.ShowErrorPages();
+        if (!this.bolSettings._CheckedPages[i - 1]) {
+          this.bolDialog.ShowErrorPages();
           return this.active;
         }
       }
     }
 
-    if (pgNo >= this.max && InitForm.bolSettings._modeSummary) {
+    if (pgNo >= this.max && this.bolSettings._modeSummary) {
       // If pgNo is greater than or equal to the maximum page and _modeSummary is enabled, navigate to the summary page
       this.Summary(pgNo);
     }
@@ -241,7 +247,7 @@ export class bolc__Page {
     if (!pgNo) pgNo = this.active + 1;
     // If pgNo is equal to the last page and _modeSummary is enabled in the bolSettings, call the Summary() method of the form
     if (pgNo == this.max && this.bolSettings._modeSummary)
-      InitForm.bolForm.Summary();
+      this.bolForm.Summary();
   }
 
   public StringOffFields(

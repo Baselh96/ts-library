@@ -9,23 +9,23 @@ import {
   ConfigStringValue,
   setText2Label,
 } from '@formular-js/core';
-import { Storage } from './storage';
+import storage from './storage';
 
 // let useSimulation = false; // can be set to true in the case of local simulation. _local_DataForm() will be called
-let useLocalSave = false; // can be set to true in the case the data can be saved via bol 'lokales Speichern'
+// let useLocalSave = false; // can be set to true in the case the data can be saved via bol 'lokales Speichern'
 
 /*** URLs to call portal services */
-let md_URL_portal = ''; // stores the URL of the portal
-let md_URL_resolver = ''; // URL of resolver, loaded by the portal
+// let md_URL_portal = ''; // stores the URL of the portal
+// let md_URL_resolver = ''; // URL of resolver, loaded by the portal
 
 // let md_FormData = []; // data of the active form in JSON, loaded by the portal
-let md_UUID = ''; // stores a given UUID from the URL
-let md_processNr = ''; // stores a given processNr from the URL
+// let md_UUID = ''; // stores a given UUID from the URL
+// let md_processNr = ''; // stores a given processNr from the URL
 
 // objects for catalogs
-let md_Authorities = []; // JSON array of authorities
+// let md_Authorities = []; // JSON array of authorities
 let md_Fuels = []; // JSON array of fuels
-let md_NACE = []; // JSON array of NACE values (code, shortText)
+// let md_NACE = []; // JSON array of NACE values (code, shortText)
 let md_EmissionControlSystems = []; // JSON array of emission control systems
 let md_CombustionPlantTypes = []; // JSON array of combustion plant types
 let md_Persons = []; // JSON array of contact persons, related to a operator
@@ -34,7 +34,6 @@ let md_PlantTypes = []; // JSON array of plant types (not used so far)
 
 // mode, how the form was called
 // 0 = local, 1 = new form called by portal, 2 = re-open a existing form from portal, 4 = re-open a form (previously saved locally), 5 = empty form via findform link
-const storage = new Storage();
 /***************************************************************************************
  * @name		getFormData
  * @summary		gets and load data for a form, defines BImSch_FormMode
@@ -47,19 +46,22 @@ export async function getFormData(
   let theId = '',
     s;
   // get the base URL for REST services from the form, value should be replaced by 'replacement element'
-  md_URL_portal = getField('fgMetaData.urlPortal').value;
+  storage.md_URL_portal = getField('fgMetaData.urlPortal').value;
   // is UUID part of the URL?
-  md_UUID = bolURLParameter('UUID');
+  storage.md_UUID = bolURLParameter('UUID');
+  const md_UUID = storage.md_UUID;
   // try to get a processNr from URL, given by the portal
-  md_processNr = bolURLParameter('processNr');
+  storage.md_processNr = bolURLParameter('processNr');
+  const md_processNr = storage.md_processNr;
+
   let md_FormData;
 
   // check for opening the form on local sys (dev/debug)
   if (location.href.indexOf('file://') >= 0) {
     storage.BImSch_FormMode = 'local';
-    useLocalSave = false;
+    storage.useLocalSave = false;
   } else {
-    useLocalSave = true;
+    storage.useLocalSave = true;
     // ok, call via findform from FS
 
     if (md_UUID == undefined || md_UUID == '') {
@@ -75,28 +77,29 @@ export async function getFormData(
     } else {
       // UUID exists, so the form is opened with a valid URL from the portal
       // 1. try to get data for a already submitted form (re-open)
-      md_URL_resolver =
+      storage.md_URL_resolver =
         getField('fgMetaData.urlResolve').value + 'process_data/' + md_UUID;
 
-      md_FormData = await svcData_Form(md_URL_resolver);
+      md_FormData = await svcData_Form(storage.md_URL_resolver);
       // check, if we have a result and in the result we have a operator ID
       if (md_FormData.length != 0) {
         // yes, JSON object received
-        {
-          try {
-            theId = md_FormData.operator.id;
-            // eslint-disable-next-line no-empty
-          } catch (err) {}
-        }
+
+        try {
+          theId = md_FormData.operator.id;
+          // eslint-disable-next-line no-empty
+        } catch (err) {}
+
         // verify that a operator id is part of data
         if (theId != undefined || theId != '')
           storage.BImSch_FormMode = 'portalOpen';
       }
       if (storage.BImSch_FormMode != 'portalOpen') {
         // 2. no result from previous call, now try to open a 'empty' form from portal
-        md_URL_resolver =
+        storage.md_URL_resolver =
           getField('fgMetaData.urlResolve').value + 'master_data/' + md_UUID;
-        await svcData_Form(md_URL_resolver);
+        // TODO: Why would we try and fetch it again here???
+        // await svcData_Form(storage.md_URL_resolver);
         if (md_FormData.length != 0) storage.BImSch_FormMode = 'portalNew';
       }
     }
@@ -107,10 +110,11 @@ export async function getFormData(
     getField('fgMetaData.processNr').value = md_processNr;
     // build PDF filename based on processNr, store in hidden form field
     getField('fgMetaData.fileName').value = md_processNr;
-    {
-      try {
-        getField('fgMetaData.processId').value = md_FormData.processId;
-      } catch (err) {}
+
+    try {
+      getField('fgMetaData.processId').value = md_FormData.processId;
+    } catch (err) {
+      // TODO: What should happen here?
     }
   } else {
     // clear hidden fields
@@ -129,7 +133,7 @@ export async function getFormData(
   console.log(
     storage.BImSch_FormMode,
     storage.useSimulation,
-    md_URL_resolver,
+    storage.md_URL_resolver,
     location.href
   );
   return md_FormData;
@@ -143,7 +147,7 @@ export async function getFormData(
  ***************************************************************************************/
 async function svcData_Form(url: string) {
   // if already loaded exit
-  if (md_FormData.length != 0) return;
+  // if (md_FormData.length != 0) return;
   if (url == undefined || url == '') return;
   try {
     const response = await fetch(url, {
@@ -159,26 +163,28 @@ async function svcData_Form(url: string) {
 
 /***************************************************************************************
  * @summary		just a bunch of functions to call REST catalogs and fill variables
- * @returns		nothing
+ * @returns		authorities
  ***************************************************************************************/
-async function svcData_Authorities() {
+export async function svcData_Authorities() {
   // if (md_Authorities.length != 0) return;
-  if (BImSch_FormMode == 'local' || useSimulation) {
-    _local_Authorities();
-    return;
+  if (storage.BImSch_FormMode == 'local' || storage.useSimulation) {
+    return _local_Authorities();
   }
-  let url = getField('fgMetaData.urlCatalogs').value + 'authorities';
-  let response = await fetch(url, {
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  if (response.ok) {
-    md_Authorities = await response.json();
+  const url = getField('fgMetaData.urlCatalogs').value + 'authorities';
+  try {
+    const response = await fetch(url, {
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
   }
 }
 async function svcData_FederalStates() {
   if (md_FederalStates.length != 0) return;
-  if (BImSch_FormMode == 'local' || useSimulation) {
+  if (storage.BImSch_FormMode == 'local' || storage.useSimulation) {
     _local_FederalStates();
     return;
   }
@@ -193,7 +199,7 @@ async function svcData_FederalStates() {
 }
 async function svcData_Fuels() {
   if (md_Fuels.length != 0) return;
-  if (BImSch_FormMode == 'local' || useSimulation) {
+  if (storage.BImSch_FormMode == 'local' || storage.useSimulation) {
     _local_Fuels();
     return;
   }
@@ -206,24 +212,27 @@ async function svcData_Fuels() {
     md_Fuels = await response.json();
   }
 }
-async function svcData_NACE() {
-  if (md_NACE.length != 0) return;
-  if (BImSch_FormMode == 'local' || useSimulation) {
-    _local_NACE();
-    return;
+export async function svcData_NACE() {
+  // TODO: Are these empty check really needed?
+  // if (md_NACE.length != 0) return;
+  if (storage.BImSch_FormMode == 'local' || storage.useSimulation) {
+    return _local_NACE();
   }
-  let url = getField('fgMetaData.urlCatalogs').value + 'nace-codes';
-  let response = await fetch(url, {
-    mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  if (response.ok) {
-    md_NACE = await response.json();
+  const url = getField('fgMetaData.urlCatalogs').value + 'nace-codes';
+  try {
+    const response = await fetch(url, {
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    return error;
   }
 }
 async function svcData_PlantTypes() {
   if (md_PlantTypes.length != 0) return;
-  if (BImSch_FormMode == 'local' || useSimulation) {
+  if (storage.BImSch_FormMode == 'local' || storage.useSimulation) {
     _local_PlantTypes();
     return;
   }
@@ -238,7 +247,7 @@ async function svcData_PlantTypes() {
 }
 async function svcData_CombustionPlantTypes() {
   if (md_CombustionPlantTypes.length != 0) return;
-  if (BImSch_FormMode == 'local' || useSimulation) {
+  if (storage.BImSch_FormMode == 'local' || storage.useSimulation) {
     _local_CombustionPlantTypes();
     return;
   }
@@ -253,7 +262,7 @@ async function svcData_CombustionPlantTypes() {
 }
 async function svcData_EmissionControlSystems() {
   if (md_EmissionControlSystems.length != 0) return;
-  if (BImSch_FormMode == 'local' || useSimulation) {
+  if (storage.BImSch_FormMode == 'local' || useSimulation) {
     _local_EmissionControlSystems();
     return;
   }
@@ -440,8 +449,8 @@ function _local_Persons() {
     },
   ];
 }
-function _local_Authorities() {
-  md_Authorities = [
+export function _local_Authorities() {
+  return [
     {
       id: 1,
       ident: 'RP 10',
@@ -493,7 +502,7 @@ function _local_FederalStates() {
   ];
 }
 function _local_NACE() {
-  md_NACE = [
+  return [
     {
       id: 0,
       code: '24540',

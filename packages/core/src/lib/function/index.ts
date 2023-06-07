@@ -15,6 +15,8 @@ export { bol_getObjectPage } from './recursive-fun/bol_getObjectPage';
 export { bol_getPage4Object } from './recursive-fun/bol_getPage4Object';
 export { bolHide } from './objects/bolHide';
 export { bolShow } from './objects/bolShow';
+export { bolHideClear } from './objects/bolHideClear';
+export { bolClear } from './objects/bolClear';
 export { bolFormInit } from './form/bolFormInit';
 export { bolFormSave } from './form/bolFormSave';
 export { bolFormSend } from './form/bolFormSend';

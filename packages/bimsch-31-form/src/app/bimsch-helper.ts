@@ -4,10 +4,22 @@
  * @author		bol, werther
  ***************************************************************************************/
 
-import { bolc__Dialog, setText2Label, bolGetDateD } from '@formular-js/core';
-import { BImSch_FormMode, _FormVersion } from './constants';
+import {
+  bolc__Dialog,
+  setText2Label,
+  bolGetDateD,
+  bolShow,
+  bolHide,
+} from '@formular-js/core';
+import { _FormVersion } from './constants';
+import storage from './storage';
+import {
+  _local_Authorities,
+  svcData_Authorities,
+  svcData_NACE,
+} from './bimsch-data';
 
-function setSaveData(newValue) {
+export function setSaveData(newValue?) {
   if (newValue != undefined) {
     if (newValue) getField('fgMetaData.saveData').value = '1';
     else getField('fgMetaData.saveData').value = '0';
@@ -31,6 +43,7 @@ function SaveFormPortal() {
 }
 
 function SendForm(submissionType) {
+  const BImSch_FormMode = storage.BImSch_FormMode;
   // update the hidden fields for account;
   getField('fgMetaData.contactLastName').value =
     getField('account.lastName').value;
@@ -85,11 +98,16 @@ function SendForm(submissionType) {
  * @param       {boolean}   destinationFieldReadonly    sets the readonly flag of an element (true locks the field)
  * @returns		nothing
  ***************************************************************************************/
-function mapField(sourceValue, destinationFieldName, destinationFieldReadonly) {
+export function mapField(
+  sourceValue,
+  destinationFieldName,
+  destinationFieldReadonly = false
+) {
   let f;
   {
     try {
       f = getField(destinationFieldName);
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   if (f == undefined) return;
@@ -125,7 +143,7 @@ export function mapTecFields(bolDialog: bolc__Dialog) {
   else setSaveData(false);
 }
 
-function MapAccount() {
+export function MapAccount(md_FormData, bolDialog) {
   function SetELSTERtest(mode) {
     if (mode) {
       getField('fgMetaData.elsterTest').value = 'true';
@@ -140,6 +158,7 @@ function MapAccount() {
       document.getElementById('bol.txtELSTER_Test').innerText = '';
     }
   }
+  const BImSch_FormMode = storage.BImSch_FormMode;
   let md, s, s2, lockMode;
   if (BImSch_FormMode == 'portalOpen' || BImSch_FormMode == 'portalNew') {
     if (md_FormData == undefined || md_FormData.length == 0) return;
@@ -152,48 +171,56 @@ function MapAccount() {
   {
     try {
       s = md.account.id;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'account.id', lockMode);
   {
     try {
       s = md.account.title;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'account.title', lockMode);
   {
     try {
       s = md.account.firstName;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'account.firstName', lockMode);
   {
     try {
       s = md.account.lastName;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'account.lastName', lockMode);
   {
     try {
       s = md.account.funktion;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'account.funktion', lockMode);
   {
     try {
       s = md.account.contactNr;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'account.contactNr', lockMode);
   {
     try {
       s = md.account.email;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'account.email', lockMode);
   {
     try {
       s = md.account.elsterTest;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   if (s == undefined || s == false) SetELSTERtest(false);
@@ -202,25 +229,30 @@ function MapAccount() {
   {
     try {
       s = md.formId;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   if (s != undefined) {
     {
       try {
         s2 = md.processId;
+        // eslint-disable-next-line no-empty
       } catch (err) {}
     }
-    if (s2 != undefined) SetText2Label('bol.txtInternalNr', s + ' / ' + s2);
-    else SetText2Label('bol.txtInternalNr', undefined);
-  } else SetText2Label('bol.txtInternalNr', undefined);
+    if (s2 != undefined)
+      setText2Label('bol.txtInternalNr', s + ' / ' + s2, bolDialog);
+    else setText2Label('bol.txtInternalNr', undefined, bolDialog);
+  } else setText2Label('bol.txtInternalNr', undefined, bolDialog);
 }
 
-function MapOperator() {
+export function MapOperator(md_FormData) {
   let md, s, lockMode;
+  const BImSch_FormMode = storage.BImSch_FormMode;
   if (BImSch_FormMode == 'portalOpen') {
     {
       try {
         md = md_FormData.formContent;
+        // eslint-disable-next-line no-empty
       } catch (err) {}
     }
     lockMode = true;
@@ -228,6 +260,7 @@ function MapOperator() {
     {
       try {
         md = md_FormData;
+        // eslint-disable-next-line no-empty
       } catch (err) {}
     }
     lockMode = true;
@@ -240,60 +273,70 @@ function MapOperator() {
   {
     try {
       s = md.operator.id;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.id', lockMode);
   {
     try {
       s = md.operator.name;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.name', lockMode);
   {
     try {
       s = md.operator.address.id;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.address.id', lockMode);
   {
     try {
       s = md.operator.address.street;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.address.street', lockMode);
   {
     try {
       s = md.operator.address.houseNr;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.address.houseNr', lockMode);
   {
     try {
       s = md.operator.address.zipCode;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.address.zipCode', lockMode);
   {
     try {
       s = md.operator.address.city;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.address.city', lockMode);
   {
     try {
       s = md.operator.address.federalState;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.address.federalState', lockMode);
   {
     try {
       s = md.operator.address.district;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operator.address.district', lockMode);
   {
     try {
       listGetShortText('operator.address.federalState');
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   // set the combobox of states to disabled
@@ -323,17 +366,17 @@ function listClearOptions(lb) {
  * @returns		{option}
  ***************************************************************************************/
 function listAddOption(code, text) {
-  let option = document.createElement('option');
+  const option = document.createElement('option');
   // if text is empty, use code for value and text
   if (text != undefined && text != '') option.text = text;
   else option.text = code;
   option.value = code;
   return option;
 }
-function listGetShortText(listname) {
-  let lb = getField(listname);
+export function listGetShortText(listname) {
+  const lb: any = getField(listname);
   if (lb == undefined) return;
-  let e = getField(listname + '_shortText');
+  const e = getField(listname + '_shortText');
   if (e == undefined) return;
   if (lb.value == '') e.value = '';
   else
@@ -357,7 +400,7 @@ async function loadList_FederalStates(listname) {
   // list already filled?
   if (md_FederalStates.length == 0) {
     // not filled, and if it's not running locally - fetch data from REST or use local object
-    if (BImSch_FormMode != 'local') await svcData_FederalStates();
+    if (storage.BImSch_FormMode != 'local') await svcData_FederalStates();
     else _local_FederalStates();
   }
   if (md_FederalStates.length == 0) return;
@@ -400,29 +443,40 @@ function list_FederalStates_shortText(listname) {
 //       listAddOption(md_Authorities[i]['ident'], md_Authorities[i]['shortText'])
 //     );
 // }
-async function loadList_Authorities(listname) {
+export async function loadList_Authorities() {
   let md_Authorities = [];
-  if (BImSch_FormMode != 'local') {
-    await svcData_Authorities();
+  if (storage.BImSch_FormMode != 'local') {
+    md_Authorities = await svcData_Authorities();
   } else {
-    _local_Authorities();
+    md_Authorities = _local_Authorities();
   }
 
-  if (md_Authorities.length == 0) return;
+  // TODO: Do we need this line???
+  // if (md_Authorities.length == 0) return;
 
-  const lb = document.getElementById(listname);
-  if (lb == undefined) return;
-  listClearOptions(lb);
+  return md_Authorities;
+}
 
-  for (let i = 0; i < md_Authorities.length; i++)
-    lb.options.add(
-      listAddOption(md_Authorities[i]['ident'], md_Authorities[i]['shortText'])
-    );
+export function populate_Authorities(listname, md_Authorities) {
+  // TODO: Potential bug in the code here since options does not exist on HTMLElement
+  const lb: any = document.getElementById(listname);
+  if (typeof lb !== 'undefined') {
+    listClearOptions(lb);
+
+    for (let i = 0; i < md_Authorities.length; i++)
+      lb.options.add(
+        listAddOption(
+          md_Authorities[i]['ident'],
+          md_Authorities[i]['shortText']
+        )
+      );
+  }
 }
 
 async function loadList_CombustionPlantTypes(listname) {
   if (md_CombustionPlantTypes.length == 0) {
-    if (BImSch_FormMode != 'local') await svcData_CombustionPlantTypes();
+    if (storage.BImSch_FormMode != 'local')
+      await svcData_CombustionPlantTypes();
     else _local_CombustionPlantTypes();
   }
   if (md_CombustionPlantTypes.length == 0) return;
@@ -564,22 +618,24 @@ function dlgPersonCancel(fname) {
  * @summary		if the list is not filled, call the REST service or fill with local simulation data
  * @returns		amount of NACE code entries
  ***************************************************************************************/
-async function getListNACE() {
-  if (md_NACE.length == 0) {
-    if (BImSch_FormMode != 0) await svcData_NACE();
-    else _local_NACE();
-  }
-  return md_NACE.length;
-}
+// TODO: Now that we have update svcData_NACE we might not need this function
+// async function getListNACE() {
+//   if (md_NACE.length == 0) {
+//     if (storage.BImSch_FormMode != 0) await svcData_NACE();
+//     else _local_NACE();
+//   }
+//   return md_NACE.length;
+// }
 /***************************************************************************************
  * @name		loadList_NACE
  * @summary		fills a listbox or select with NACE entries
  * @param		{string}	listname	name or id of the select/listbox element
  * @returns		nothing
  ***************************************************************************************/
-function loadList_NACE(listname) {
-  if (getListNACE() == 0) return; // list is empty
-  let lb = document.getElementById(listname);
+async function loadList_NACE(listname) {
+  const md_NACE = await svcData_NACE();
+  if (md_NACE?.length === 0) return; // list is empty
+  const lb: any = document.getElementById(listname);
   if (lb == undefined) return;
   lb.innerHTML = '';
   for (let i = 0; i < md_NACE.length; i++)
@@ -597,14 +653,15 @@ function loadList_NACE(listname) {
  * @param		{string}	fieldOfText	name or id of field where to store the NACE text
  * @returns		nothing
  ***************************************************************************************/
-function lookupNACE(fieldOfCode, fieldOfText) {
-  if (getListNACE() == 0) return; // list is empty
+async function lookupNACE(fieldOfCode, fieldOfText) {
+  const md_NACE = await svcData_NACE();
+  if (md_NACE?.length === 0) return; // list is empty
   // value of source empty, clear destination
   if (getField(fieldOfCode).value == '') {
     getField(fieldOfText).value = '';
     return;
   }
-  let o = md_NACE.filter(
+  const o = md_NACE.filter(
     ({ code }) => code.indexOf(getField(fieldOfCode).value) >= 0
   );
   // nothing found, clear destination
@@ -620,10 +677,11 @@ function lookupNACE(fieldOfCode, fieldOfText) {
  * @param		{string}	filtername	name or id of field where the filter value is enterd
  * @returns		nothing
  ***************************************************************************************/
-function filterNACE(listname, filtername) {
-  let lb = document.getElementById(listname);
+export async function filterNACE(listname, filtername) {
+  const md_NACE = await svcData_NACE();
+  const lb: any = document.getElementById(listname);
   if (lb == undefined) return;
-  let fv = getField(filtername).value;
+  const fv = getField(filtername).value;
   if (fv == '') return;
   let o;
   o = md_NACE.filter(
@@ -644,7 +702,8 @@ function filterNACE(listname, filtername) {
  * @param		{string}	fname	name or id of the source/destination field. fname is used for the button too
  * @returns		nothing
  ***************************************************************************************/
-function dlgNACE(fname) {
+export async function dlgNACE(fname) {
+  // TODO: This code and the use of filterNace is problematice this function will not be globally available
   // get the element for dlgNACE
   let e = document.getElementById('dlgNACE');
   if (e == undefined) {
@@ -694,7 +753,7 @@ function dlgNACE(fname) {
   e.innerHTML = s;
   let dlg = new bootstrap.Modal(e);
   // fill the listbox with NACE values
-  loadList_NACE('dlgListNACE');
+  await loadList_NACE('dlgListNACE');
   dlg.show();
   // set the focus to filter input field
   document.getElementById('filter.NACE').focus();
@@ -705,14 +764,17 @@ function dlgNACE(fname) {
  * @param		{string}	fname	name or id of the source/destination field.
  * @returns		nothing
  ***************************************************************************************/
-function dlgNACEClose(fname) {
-  let f = this.getField('dlgListNACE');
+async function dlgNACEClose(fname) {
+  // TODO: We might need a more permanent state management solution here or do we use storage class???
+  const md_NACE = await svcData_NACE();
+  const f = this.getField('dlgListNACE');
   if (f.value == '') return;
-  let o = md_NACE.filter(({ code }) => code == parseInt(f.value));
+  const o = md_NACE.filter(({ code }) => code == parseInt(f.value));
   if (o == undefined) return;
   this.getField(fname + '.code').value = o[0].code;
   this.getField(fname + '.shortText').value = o[0].shortText;
-  dlgNACEcancel();
+  // TODO: Did you mean dlgNACECancel???
+  // dlgNACEcancel();
 }
 /***************************************************************************************
  * @name		dlgNACECancel
@@ -731,7 +793,7 @@ function dlgNACECancel() {
 /***************************************************************************************/
 async function loadList_EmissionControlSystems(listname) {
   if (md_EmissionControlSystems.length == 0) {
-    if (BImSch_FormMode != 0) await svcData_EmissionControlSystems();
+    if (storage.BImSch_FormMode != 0) await svcData_EmissionControlSystems();
     else _local_EmissionControlSystems();
   }
   if (md_EmissionControlSystems.length == 0) return;

@@ -3,16 +3,35 @@
  * @version     1.1, 2023-05
  * @author		bol, werther
  ***************************************************************************************/
-import { InitForm } from '@formular-js/core';
-import { getFormData } from './bimsch-data';
-import { mapTecFields } from './bimsch-helper';
+import {
+  InitForm,
+  bolShow,
+  bolHide,
+  bolHideClear,
+  bol_UpdateLabel,
+  setText2Label,
+  bolc__Page,
+  bolc__Dialog,
+} from '@formular-js/core';
+import { getFormData, svcData_NACE } from './bimsch-data';
+import {
+  mapTecFields,
+  loadList_Authorities,
+  populate_Authorities,
+  MapAccount,
+  MapOperator,
+  mapField,
+  listGetShortText,
+  setSaveData,
+} from './bimsch-helper';
+import storage from './storage';
 
 // build the inbox list string
 const _sInbox = 'Bericht von <operator/name>';
 
 // TODO: Loads data of form
-export async function loadForm31_1(form: InitForm, useSimulation = false) {
-  const { bolSettings, bolSteps } = form;
+export async function loadForm31_1(form: InitForm) {
+  const { bolSettings, bolSteps, bolDialog } = form;
   // hide and show fields in summary
   bolSettings.fieldsNotInSummary = ['bol.NoPageCheck'];
   // TODO: Not defined in class - could be redundant
@@ -87,21 +106,26 @@ export async function loadForm31_1(form: InitForm, useSimulation = false) {
   mapTecFields(form.bolDialog); // from bimsch-helper
 
   // fill required catalogs/comboboxes on form
-  await loadList_Authorities('operatingSite.competentAuthority');
-  await svcData_NACE();
+  const md_Authorities = await loadList_Authorities();
+  populate_Authorities('operatingSite.competentAuthority', md_Authorities);
+
+  // TODO: Do we need to fetch here? Since this only fetches and never does anything with the result, dlgNACE seems to be where this list is fetched and populated
+  const naceCodes = await svcData_NACE();
+
   // map field values for each standard block
-  MapAccount();
-  MapOperator();
+  MapAccount(md_FormData, bolDialog);
+  MapOperator(md_FormData);
   // map base fields for this form
-  MapOperatingSite31_1();
-  MapPlant31_1();
+  MapOperatingSite31_1(md_FormData);
+  MapPlant31_1(md_FormData);
 
   // only in the case of a re-openend form, map existing fields
-  if (BImSch_FormMode == 'portalOpen') MapData31_1();
+  if (storage.BImSch_FormMode == 'portalOpen') MapData31_1(md_FormData);
 }
 
-function MapOperatingSite31_1() {
+function MapOperatingSite31_1(md_FormData) {
   let md, s;
+  const BImSch_FormMode = storage.BImSch_FormMode;
   if (md_FormData == undefined || md_FormData.length == 0) return;
   if (BImSch_FormMode == 'portalOpen') md = md_FormData.formContent;
   else if (BImSch_FormMode == 'portalNew') md = md_FormData;
@@ -110,30 +134,35 @@ function MapOperatingSite31_1() {
   {
     try {
       s = md.operatingSite.id;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.id');
   {
     try {
       s = md.operatingSite.name;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.name');
   {
     try {
       s = md.operatingSite.nr;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.nr');
   {
     try {
       s = md.operatingSite.naceCode.code;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.naceCode.code');
   {
     try {
       s = md.operatingSite.naceCode.shortText;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.naceCode.shortText');
@@ -141,84 +170,98 @@ function MapOperatingSite31_1() {
   if (BImSch_FormMode == 'portalNew') {
     try {
       s = md.operatingSite.competentAuthority.ident;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   } else {
     try {
       s = md.operatingSite.competentAuthority;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.competentAuthority');
   {
     try {
       listGetShortText('operatingSite.competentAuthority');
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
 
   {
     try {
       s = md.operatingSite.address.id;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.address.id');
   {
     try {
       s = md.operatingSite.address.street;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.address.street');
   {
     try {
       s = md.operatingSite.address.houseNr;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.address.houseNr');
   {
     try {
       s = md.operatingSite.address.zipCode;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.address.zipCode');
   {
     try {
       s = md.operatingSite.address.city;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.address.city');
   {
     try {
       s = md.operatingSite.address.federalState;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.address.federalState');
   {
     try {
       s = md.operatingSite.address.district;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.address.district');
   {
     try {
       s = md.operatingSite.building;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'operatingSite.building');
   {
     try {
       listGetShortText('operatingSite.address.federalState');
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   if (BImSch_FormMode == 'portalOpen') {
     {
       try {
         s = md.operatingSite.address.YN;
+        // eslint-disable-next-line no-empty
       } catch (err) {}
     }
     mapField(s, 'operatingSite.address.YN');
   }
   bolHideClear('operatingSite.address.YN', 'zone.operatingSite.address', 'ja');
 }
-function MapPlant31_1() {
+function MapPlant31_1(md_FormData) {
   let md, s;
+  const BImSch_FormMode = storage.BImSch_FormMode;
   if (md_FormData == undefined || md_FormData.length == 0) return;
   if (BImSch_FormMode == 'portalOpen') md = md_FormData.formContent.plant;
   else if (BImSch_FormMode == 'portalNew') md = md_FormData.plants[0];
@@ -227,18 +270,21 @@ function MapPlant31_1() {
   {
     try {
       s = md.id;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.id');
   {
     try {
       s = md.name;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.name');
   {
     try {
       s = md.nr;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.nr');
@@ -246,36 +292,42 @@ function MapPlant31_1() {
   {
     try {
       s = md.approvalReferenceNumber;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.approvalReferenceNumber');
   {
     try {
       s = md.nrAccordingToAppendix1Of4BImSchV;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.nrAccordingToAppendix1Of4BImSchV');
   {
     try {
       s = md.nrAccordingToIEDirective;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.nrAccordingToIEDirective');
   {
     try {
       s = md.nrAccordingToPRTR;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.nrAccordingToPRTR');
   {
     try {
       s = md.registryCode;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.registryCode');
   {
     try {
       s = md.referenceIE;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.referenceIE');
@@ -283,36 +335,42 @@ function MapPlant31_1() {
   {
     try {
       s = md.eastValue;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.eastValue');
   {
     try {
       s = md.northValue;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.northValue');
   {
     try {
       s = md.district;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.district');
   {
     try {
       s = md.corridor;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.corridor');
   {
     try {
       s = md.parcel;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   mapField(s, 'plant.parcel');
   {
     try {
       s = md.outdoorPlant;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
 
@@ -328,10 +386,10 @@ function Show_outdoorPlant() {
 }
 
 // map data for Form § 1 der 31. BImSchG - Jaehrliche Auskunft
-async function MapData31_1() {
-  let md, s;
+async function MapData31_1(md_FormData) {
+  let s;
   if (md_FormData == undefined || md_FormData.length == 0) return;
-  md = md_FormData.formContent;
+  const md = md_FormData.formContent;
   if (md == undefined) return;
 
   {
@@ -944,6 +1002,7 @@ function UpdateHiddenFormFields() {
   {
     try {
       s = getField('plant.name').value;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   if (s != undefined && s != '') getField('fgMetaData.plantName').value = s;
@@ -952,6 +1011,7 @@ function UpdateHiddenFormFields() {
   {
     try {
       s = getField('operatingSite.competentAuthority_shortText').value;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   if (s != undefined && s != '') getField('fgMetaData.authorityName').value = s;
@@ -960,6 +1020,7 @@ function UpdateHiddenFormFields() {
   {
     try {
       s = getField('operatingSite.address.YN').value;
+      // eslint-disable-next-line no-empty
     } catch (err) {}
   }
   if (s == 'ja') {
@@ -1023,25 +1084,30 @@ const fields_other = [
 ];
 
 function Form31Page_measurement() {
-  let j;
   for (let i = 0; i < fields_measurement.length; i++) {
     bolHideClear(
       'measurement.' + fields_measurement[i] + '.YN',
       'zone.measurement.' + fields_measurement[i],
       'ja'
     );
-    document.getElementById(
-      'measurement.' + fields_measurement[i] + '.comment'
-    ).rows = '3';
+    // TODO: Cannot assign to 'rows' because it is a read-only property
+    (
+      document.getElementById(
+        'measurement.' + fields_measurement[i] + '.comment'
+      ) as any
+    ) /*HTMLTableElement*/.rows = '3';
   }
-  j = parseInt(getField('measurement.files.fileCount').value);
+  const j = parseInt(getField('measurement.files.fileCount').value);
   if (j > 0) {
     bolShow('zone.measurement.files');
     for (let i = 1; i < j + 1; i++) bolShow('measurement.file' + i + '.title');
     for (let i = j + 1; i < 11; i++)
       bolHideClear('measurement.file' + i + '.title');
   } else bolHideClear('zone.measurement.files');
-  document.getElementById('measurement.fulfillRequirements.comment').rows = '3';
+  // TODO: Cannot assign to 'rows' because it is a read-only property
+  (
+    document.getElementById('measurement.fulfillRequirements.comment') as any
+  ).rows = '3';
 
   if (getField('measurement.files.fileCount').value != '0')
     bolShow('zone.measurement.files');
@@ -1059,8 +1125,11 @@ function Form31Page_maintenance() {
       'zone.maintenance.' + fields_maintenance[i],
       'ja'
     );
-    document.getElementById(
-      'maintenance.' + fields_maintenance[i] + '.comment'
+    // TODO: Cannot assign to 'rows' because it is a read-only property
+    (
+      document.getElementById(
+        'maintenance.' + fields_maintenance[i] + '.comment'
+      ) as any
     ).rows = '3';
   }
 }
@@ -1071,8 +1140,11 @@ function Form31Page_selfControl() {
       'zone.selfControl.' + fields_selfControl[i],
       'ja'
     );
-    document.getElementById(
-      'selfControl.' + fields_selfControl[i] + '.comment'
+    // TODO: Cannot assign to 'rows' because it is a read-only property
+    (
+      document.getElementById(
+        'selfControl.' + fields_selfControl[i] + '.comment'
+      ) as any
     ).rows = '3';
   }
 }
@@ -1083,8 +1155,11 @@ function Form31Page_cycleWaste() {
       'zone.cycleWaste.' + fields_cycleWaste[i],
       'ja'
     );
-    document.getElementById(
-      'cycleWaste.' + fields_cycleWaste[i] + '.comment'
+    // TODO: Cannot assign to 'rows' because it is a read-only property
+    (
+      document.getElementById(
+        'cycleWaste.' + fields_cycleWaste[i] + '.comment'
+      ) as any
     ).rows = '3';
   }
 }
@@ -1095,9 +1170,12 @@ function Form31Page_other() {
       'zone.other.' + fields_other[i],
       'ja'
     );
-    document.getElementById('other.' + fields_other[i] + '.comment').rows = '3';
+    // TODO: Cannot assign to 'rows' because it is a read-only property
+    (
+      document.getElementById('other.' + fields_other[i] + '.comment') as any
+    ).rows = '3';
   }
-  j = parseInt(getField('other.files.fileCount').value);
+  const j = parseInt(getField('other.files.fileCount').value);
   if (j > 0) {
     bolShow('zone.other.files');
     for (let i = 1; i < j + 1; i++) bolShow('other.file' + i + '.title');
@@ -1106,11 +1184,15 @@ function Form31Page_other() {
 }
 function Form31Page_events() {
   for (let i = 1; i < 6; i++) {
-    document.getElementById('events.event' + i + '.comment').rows = '3';
-    document.getElementById('events.event' + i + '.cause').rows = '3';
-    document.getElementById('events.event' + i + '.timeframe').rows = '3';
-    document.getElementById('events.event' + i + '.action').rows = '3';
-    document.getElementById('events.event' + i + '.complaint').rows = '3';
+    // TODO: Cannot assign to 'rows' because it is a read-only property
+    (document.getElementById('events.event' + i + '.comment') as any).rows =
+      '3';
+    (document.getElementById('events.event' + i + '.cause') as any).rows = '3';
+    (document.getElementById('events.event' + i + '.timeframe') as any).rows =
+      '3';
+    (document.getElementById('events.event' + i + '.action') as any).rows = '3';
+    (document.getElementById('events.event' + i + '.complaint') as any).rows =
+      '3';
   }
   if (this.getField('events.YN').value == 'ja') {
     bolShow('zone.events.event1');
@@ -1128,7 +1210,7 @@ function Form31Page_UploadFields() {
 
   function FileSingle(gName, fname) {
     if (getField(gName + '.' + fname + '.YN').value == 'ja') {
-      let j = parseInt(getField(gName + '.' + fname + '.fileCount').value);
+      const j = parseInt(getField(gName + '.' + fname + '.fileCount').value);
       if (j > 0) {
         bolShow('Anhang_' + gName + '_' + fname + '_1');
         return 1;
@@ -1139,7 +1221,7 @@ function Form31Page_UploadFields() {
   }
   function FileList(gName, fname) {
     if (getField(gName + '.' + fname + '.YN').value == 'ja') {
-      let j = parseInt(getField(gName + '.' + fname + '.fileCount').value);
+      const j = parseInt(getField(gName + '.' + fname + '.fileCount').value);
       if (j > 0) {
         for (let i = 1; i < j + 1; i++) {
           bolShow('Anhang_' + gName + '_' + fname + '_' + i);
@@ -1154,7 +1236,7 @@ function Form31Page_UploadFields() {
     return 0;
   }
   function FilePlus(gName) {
-    let j = parseInt(getField(gName + '.files.fileCount').value);
+    const j = parseInt(getField(gName + '.files.fileCount').value);
     if (j > 0) {
       for (let i = 1; i < j + 1; i++) {
         bol_UpdateLabel(
@@ -1211,29 +1293,29 @@ function Form31Page_UploadFields() {
  * just these functions, which are required for the specific project
  ***************************************************************************************************/
 // this function is called after a page in the form is shown
-function bolProject_DoSomethingOnPage(PageNo) {
-  SetText2Label('bol.txtInfo', 'sidehlp_31_1');
+export function bolProject_DoSomethingOnPage(PageNo, bolDialog: bolc__Dialog) {
+  setText2Label('bol.txtInfo', 'sidehlp_31_1', bolDialog);
   bolHide('btnSend');
   bolHide('btnPrint');
   bolShow('btnNext');
   bolShow('btnPrev');
   if (getField('fgMetaData.saveData').value == '1') bolShow('btnSave');
   switch (PageNo) {
-    case bolPage.max:
+    case bolc__Page.max:
       bolShow('btnPrint');
       bolShow('btnSend');
       bolHide('btnSave');
       bolHide('btnNext');
       break;
-    case bolPage.max - 1:
+    case bolc__Page.max - 1:
       Form31Page_UploadFields();
       break;
     case 6:
     case 5:
-      SetText2Label('bol.txtInfo', 'sidehlp_31_1files');
+      setText2Label('bol.txtInfo', 'sidehlp_31_1files', bolDialog);
       break;
     case 1:
-      SetText2Label('bol.txtFormSave', 'sidehlp_save');
+      setText2Label('bol.txtFormSave', 'sidehlp_save', bolDialog);
       bolHide('btnPrev');
       break;
   }
