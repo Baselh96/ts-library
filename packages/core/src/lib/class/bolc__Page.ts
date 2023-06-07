@@ -13,6 +13,10 @@ import { HTMLInputsType } from '../type/htmlInputsType';
 export class bolc__Page {
   //Is an instance of the Settings class, which we get as a parameter in the configuration.
   private bolSettings: bolc__Settings;
+  public max: number;
+  // private bolSteps: bolc__Steps;
+  // private bolForm: bolc__Form;
+  // private bolDialog: bolc__Dialog;
 
   constructor(
     bolSettings: bolc__Settings,
@@ -22,6 +26,7 @@ export class bolc__Page {
     public page_focus?: any[]
   ) {
     this.bolSettings = bolSettings;
+    this.max = bolc__Page.max;
   }
 
   get active(): number {
@@ -81,7 +86,7 @@ export class bolc__Page {
     this.Show();
 
     // Update the step indicator
-    InitForm.bolSteps.Update(oldPgNo, this.active);
+      InitForm.bolSteps.Update(oldPgNo, this.active);
 
     if (this.bolProject_DoSomethingOnPage)
       this.bolProject_DoSomethingOnPage(this.active);

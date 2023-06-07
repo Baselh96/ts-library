@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve bimsch-form",
+    "start": "nx serve bimsch-31-form",
     "build:core": "nx build core",
     "test:core": "nx test core",
     "lint:core": "nx lint core",
-    "build:bimsch": "nx build bimsch-form"
+    "build:bimsch31": "nx build bimsch-31-form"
   },
   "private": true,
   "dependencies": {

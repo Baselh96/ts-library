@@ -30,12 +30,9 @@ export class bolc__Steps {
 
   //Is an instance of the bolSettings class, which we get as a parameter.
   private bolSettings: bolc__Settings;
-  //Is an instance of the bolPage class, which we get as a parameter.
-  private bolPage: bolc__Page;
 
-  constructor(bolSettings: bolc__Settings, bolPage: bolc__Page) {
+  constructor(bolSettings: bolc__Settings) {
     this.bolSettings = bolSettings;
-    this.bolPage = bolPage;
 
     this._color_line = getCssVariable(
       '--bol-color-stepbutton-line',
@@ -46,7 +43,7 @@ export class bolc__Steps {
       'rgb(0, 64, 128)'
     );
 
-    for (let i = 1; i < this.bolPage.max + 1; i++) {
+    for (let i = 1; i < bolc__Page.max + 1; i++) {
       this.Buttons.push({
         lang: 'de',
         page: i,
@@ -170,6 +167,10 @@ export class bolc__Steps {
     this.StyleIt();
   }
 
+  get active(): number {
+    return this.bolSettings.page !== 0 ? this.bolSettings.page : 1;
+  }
+
   /**
    * This method generates an SVG image for the step buttons.
    * Depending on the passed "Mode" (active or inactive), a corresponding SVG path is created and filled with colors from the object.
@@ -228,7 +229,7 @@ export class bolc__Steps {
       btn.setAttribute('title', steptip);
 
       // Add active/inactive class and background image if applicable
-      if (this.bolPage.active == button.page) {
+      if (this.active == button.page) {
         btn.classList.add(
           this.bolSettings._StepButtonPosition == 'left'
             ? 'bol-stepbtn-active-left'
@@ -427,9 +428,7 @@ export class bolc__Steps {
     this.StyleIt();
 
     // Search for the button with the specified page from bolPage number
-    const button = this.Buttons.find(
-      (item) => item.page === this.bolPage.active
-    );
+    const button = this.Buttons.find((item) => item.page === this.active);
 
     // If the button was found, set the attribute precent of this class on the precent of button
     if (button) {
