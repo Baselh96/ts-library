@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { getCssVariable } from '../function/helper/getCssVariable';
 import { setPrecentStyleHelper } from '../function/helper/setPrecentStyleHelper';
-// TODO: Can probably remove
-// import { Button } from '../model/buttons.model';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
 
 interface IButton {
   lang: string;
   page: number;
-  visible: true;
+  visible: boolean;
   percent: number;
   label: string;
   tip?: string;

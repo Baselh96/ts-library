@@ -37,7 +37,7 @@ export class bolc__Page {
     this.bolSettings.page = pageNumber;
   }
 
-  get max(): number {
+  static get max(): number {
     const e = document.querySelectorAll('div.row[id^=page]');
     return e ? e.length : 0;
   }

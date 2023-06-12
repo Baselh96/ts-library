@@ -4,7 +4,7 @@ import { createHTMLInput } from './createHTMLInput';
 describe('createHTMLInput', () => {
   
   it('Verification with correct values', () => {
-    let expectedValue = `[${new ConfigString(
+    const expectedValue = `[${new ConfigString(
       'active_page_number',
       1
     ).toString()}]`;
@@ -16,7 +16,7 @@ describe('createHTMLInput', () => {
 
   
   it('Verification with falsified values', () => {
-    let expectedValue = `[ ${new ConfigString('test', 1).toString()}]`;
+    const expectedValue = `[ ${new ConfigString('test', 1).toString()}]`;
     
     expect(createHTMLInput('testId').value).not.toBe(expectedValue);
     expect(createHTMLInput('testId').id).not.toBe('id');

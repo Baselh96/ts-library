@@ -37,6 +37,10 @@ export function bolHideClear(
   if (element1 instanceof HTMLInputElement && element1.type === 'checkbox') {
     handleCheckboxInput(element1, oname2, val2Show);
   } else {
+    if (val2Show === undefined) {
+      // If val2Show is not provided, return immediately
+      return;
+    }
     if (
       element1 instanceof HTMLInputElement &&
       element1.value.toLowerCase() == val2Show.toLowerCase()
@@ -48,7 +52,16 @@ export function bolHideClear(
       bolHideAndClear(oname2);
     }
   }
-      }
+}
+
+function handleCheckboxInput(
+  checkbox: HTMLInputElement,
+  oname2?: string,
+  val2Show?: string
+): void {
+  if (checkbox.checked) {
+    if (val2Show === undefined) {
+      bolShow(oname2 || '');
     } else {
       bolHideAndClear(oname2);
     }
@@ -59,6 +72,14 @@ export function bolHideClear(
       bolShow(oname2 || '');
     }
   }
-    }
+}
+
+/**
+ * To Hide and clear the element
+ */
+function bolHideAndClear(elementId?: string): void {
+  if (elementId) {
+    bolHide(elementId);
+    bolClear(elementId);
   }
 }

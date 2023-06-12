@@ -1,7 +1,7 @@
 import { bolc__Settings } from './bolc__Settings';
 
 describe('class bolc__Settings', () => {
-  const instance = new bolc__Settings();
+  const instance = new bolc__Settings([]);
 
   it('Testen some variable', () => {
     expect(instance.isBootstrap).toBeTruthy();
@@ -36,7 +36,7 @@ describe('class bolc__Settings', () => {
     document.body.appendChild(form);
 
     //Call the function
-    instance.Load();
+    instance.Load([]);
 
     //Ande check the first child of form, if it will be the added input with id 'bol.FormSettings'
     expect(form.children[0].id).toBe('bol.FormSettings');

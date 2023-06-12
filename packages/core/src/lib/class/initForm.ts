@@ -78,7 +78,7 @@ export class InitForm {
     );
 
     // Create a new instance of bolc__Steps with the bolSettings and bolPage as arguments
-    InitForm.bolSteps = new bolc__Steps(InitForm.bolSettings, InitForm.bolPage);
+    InitForm.bolSteps = new bolc__Steps(InitForm.bolSettings);
 
     // Call the StyleIt method of bolForm with bolBarStyle as an argument
     InitForm.bolForm.StyleIt(bolBarStyle);
