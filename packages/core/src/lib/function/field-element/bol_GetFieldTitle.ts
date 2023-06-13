@@ -1,6 +1,5 @@
 import { InitForm } from '../../class/initForm';
 import { getAlternative } from './getAlternative';
-//import { global } from '../../../global';
 
 /**
  * Returns the title of the field represented by the given element.
@@ -9,8 +8,6 @@ import { getAlternative } from './getAlternative';
  */
 
 export function bol_GetFieldTitle(obj: HTMLElement): string {
-  let s = '';
-
   // Radio buttons should have the same title as the first element in the group.
   if (
     obj instanceof HTMLInputElement &&
@@ -20,7 +17,7 @@ export function bol_GetFieldTitle(obj: HTMLElement): string {
   }
 
   // Try to find an alternative name.
-  s =
+  let s =
     obj instanceof HTMLInputElement && InitForm.bolSettings
       ? getAlternative(obj.name, InitForm.bolSettings.FieldNamesAlternative)
       : '';

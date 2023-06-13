@@ -141,7 +141,7 @@ export class bolc__Fieldset {
     }
   }
 
-  StyleIt(): void {
+  StyleIt(bolProject_Refresh?: (id: string, fs_id?: string) => void): void {
     // Check if _obj is defined
     if (!this._obj) return;
 
@@ -209,7 +209,13 @@ export class bolc__Fieldset {
     }
 
     // Call the editFsLegend method to update the fieldset's style and content
-    this.editFsLegend(newStyle || '', myClasses, fsLegend, fsInner);
+    this.editFsLegend(
+      newStyle || '',
+      myClasses,
+      fsLegend,
+      fsInner,
+      bolProject_Refresh
+    );
 
     // Toggle the display of the fieldset based on its current state
     if (this._obj.style.display) {
@@ -227,7 +233,8 @@ export class bolc__Fieldset {
     newStyle: string,
     myClasses: string[],
     fsLegend: HTMLLegendElement,
-    fsInner: Element
+    fsInner: Element,
+    bolProject_Refresh?: (id: string, fs_id?: string) => void
   ): void {
     // Find the index of '@' symbol in fsLegend's innerText
     const index = fsLegend.innerText.indexOf('@');
@@ -245,7 +252,8 @@ export class bolc__Fieldset {
         myClasses,
         fsLegend,
         legendText,
-        legendHelp
+        legendHelp,
+        bolProject_Refresh
       );
     } else if (legendHelp !== '') {
       // If there are no custom classes but there is legend help, display the legend text with info button
@@ -288,7 +296,8 @@ export class bolc__Fieldset {
     myClasses: string[],
     fsLegend: HTMLLegendElement,
     legendText: string,
-    legendHelp: string
+    legendHelp: string,
+    bolProject_Refresh?: (id: string, fs_id?: string) => void
   ): void {
     // Create a new row element
     const lRow = document.createElement('div');
@@ -321,7 +330,12 @@ export class bolc__Fieldset {
     for (const myClass of myClasses) {
       lColR.innerHTML += '&nbsp;';
       lColR.appendChild(
-        btnstring(this.bolSettings, myClass, this._obj?.id || '')
+        btnstring(
+          this.bolSettings,
+          myClass,
+          this._obj?.id || '',
+          bolProject_Refresh
+        )
       );
 
       // If the function is 'bol-fs-down', call the SwitchOnOff method with false

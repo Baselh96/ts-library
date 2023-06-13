@@ -29,7 +29,7 @@ export class bolc__Settings {
   private _formCodePage: string = 'UTF-8';
 
   // Level der Anzeige von Fehlermeldungen: 3 = bootstrap Dialog, 2 = alert, 1 = console, 0 = keine Anzeige
-  public _modeError: number | undefined;
+  public _modeError?: number;
   // Auflistung der Fehlerfelder beim Check einer Seite oder eines Blocks von Feldern
   public _fdsError: FieldError[] = [];
   // Farbe fuer die Anzeige von Fehlern (Hintergrund)
@@ -38,13 +38,13 @@ export class bolc__Settings {
   public _colorErrorFg: string = '';
 
   // soll bol Routine zum Dateiladen verwendet werden?
-  public useLoad4Files: ConfigStringValue | undefined;
+  public useLoad4Files?: ConfigStringValue;
   // soll das HTML-Attribut accept für Dateifelder verwendet werden
-  public useAccept4Files: ConfigStringValue | undefined;
+  public useAccept4Files?: ConfigStringValue;
   // zulaessige Dateierweiterungen und MIME-Types
-  public fileTypes: ConfigStringValue | undefined;
+  public fileTypes?: ConfigStringValue;
   // maximale Dateigroesse in MByte
-  public FileMaxSize: ConfigStringValue | undefined;
+  public FileMaxSize?: ConfigStringValue;
   // Umfang der im Formular bereits geladenen Dateien in MByte
   private FileSizes: number = 0;
   // JSON-array der im Formular geladenen Dateien

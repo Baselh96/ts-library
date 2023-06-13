@@ -4,13 +4,14 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve bimsch-31-form",
-    "build:core": "nx build core",
+    "build:core": "nx build core --verbose",
     "test:core": "nx test core",
     "lint:core": "nx lint core",
     "build:bimsch31": "nx build bimsch-31-form"
   },
   "private": true,
   "dependencies": {
+    "@nrwl/webpack": "^15.5.2",
     "bootstrap": "^5.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",

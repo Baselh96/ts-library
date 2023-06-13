@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { getCssVariable } from '../function/helper/getCssVariable';
 import { setPrecentStyleHelper } from '../function/helper/setPrecentStyleHelper';
-// TODO: Can probably remove
-// import { Button } from '../model/buttons.model';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
 
 interface IButton {
   lang: string;
   page: number;
-  visible: true;
+  visible: boolean;
   percent: number;
   label: string;
   tip?: string;
@@ -20,9 +18,9 @@ interface IButton {
  * step buttons, progress bar
  ***************************************************************************************************/
 export class bolc__Steps {
-  private _obj: HTMLElement | undefined;
+  private _obj?: HTMLElement;
   public Buttons: IButton[] = [];
-  private _infoText: string = '';
+  public _infoText: string = '';
   private _percent: number = 10;
   private _percentStyle: string = 'basic';
   private _color_line: string = '';

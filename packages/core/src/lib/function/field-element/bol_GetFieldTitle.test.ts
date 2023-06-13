@@ -10,7 +10,7 @@ describe('bol_GetFieldTitle', () => {
 
     document.body.appendChild(input);
     
-    InitForm.bolSettings = new bolc__Settings();
+    InitForm.bolSettings = new bolc__Settings([]);
 
     expect(bol_GetFieldTitle(input)).toEqual('testNameTitle');
   });

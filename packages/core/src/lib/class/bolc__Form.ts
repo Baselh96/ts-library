@@ -3,25 +3,28 @@
 /* eslint-disable no-empty */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable no-case-declarations */
-import { bolDebug, bol_GetFieldTitle } from '../function';
+import {
+  bolDebug,
+  bol_GetFieldTitle,
+  bol_getFieldsetLegend,
+} from '../function';
 import { createBolFooterBar } from '../function/helper/createBolFooterBar';
-import { FieldNotInSummary } from '../function/helper/fieldNotInSummary';
 import { generatePdfDisplayUrl } from '../function/helper/generatePdfDisplayUrl';
 import { updateWappen } from '../function/helper/updateWappen';
 import { bolHide } from '../function/objects/bolHide';
 import { bolShow } from '../function/objects/bolShow';
-import { bol_getFieldsetLegend } from '../function/recursive-fun/bol_getFieldsetLegend';
 import { bol_getPage4Object } from '../function/recursive-fun/bol_getPage4Object';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
 import { getField } from '../function/other-functions/getField';
+import { FieldNotInSummary } from '../function/helper/fieldNotInSummary';
 
 /***************************************************************************************************
  * BLOCK
  * Form
  ***************************************************************************************************/
 export class bolc__Form {
-  private _obj: HTMLFormElement | undefined;
+  private _obj?: HTMLFormElement;
   private _Kundenname: string = '';
   private _Kundenstrasse: string = '';
   private _KundenPLZ: string = '';
@@ -32,7 +35,6 @@ export class bolc__Form {
   private _Kontakt_Link: string = '';
   private _DSGVO_Link: string = '';
   private _SidebarText: string = '';
-  private numFields: number;
 
   //Is an instance of the bolSettings class, which we get as a parameter.
   private bolSettings: bolc__Settings;
@@ -45,7 +47,10 @@ export class bolc__Form {
     bolSettings: bolc__Settings,
     bolPage: bolc__Page,
     bolFormVersion: string,
-    numFields: number,
+    public OnSubmit?: (noValidation: boolean) => boolean,
+    public bolProject_Summary?: (page: number) => string,
+    public getNthFieldName?: (n: number) => string,
+    public numFields?: number,
     public bol__control_names?: any[],
     public contoll_names?: any[],
     public bol__notInSummary?: any[]
@@ -53,7 +58,6 @@ export class bolc__Form {
     this.bolSettings = bolSettings;
     this.bolPage = bolPage;
     this.bolFormVersion = bolFormVersion;
-    this.numFields = numFields;
     // Get the form element with the name "bolForm"
     this._obj = document.getElementsByName('bolForm')[0] as HTMLFormElement;
 
@@ -124,20 +128,14 @@ export class bolc__Form {
   /**
    * This method resets the input html element with the id 'act_form_saved'.
    */
-  // TODO: Here we can just add bolProject_RestoreFromTemp as param
-  public RestoreTemp(): void {
+  public RestoreTemp(bolProject_RestoreFromTemp?: () => void): void {
     // Find the input element with id "act_form_saved"
     const e = document.getElementById('act_form_saved') as HTMLInputElement;
 
     // If the element exists and has a value
     if (e && e.value !== '') {
       // Try to restore the project data from temporary storage
-      try {
-        //TODO: implement this function
-        //bolProject_RestoreFromTemp();
-      } catch (err) {
-        // If an error occurs while restoring data, ignore it and proceed
-      }
+      if (bolProject_RestoreFromTemp) bolProject_RestoreFromTemp();
 
       // Clear the value of the "act_form_saved" input element
       e.value = '';
@@ -149,8 +147,7 @@ export class bolc__Form {
    * before submitting the form
    * @returns is the boolean value for the success or failure of saving
    */
-  // TODO: Pass bolProject_SaveForTemp as argument
-  public SaveTemp(): boolean {
+  public SaveTemp(bolProject_SaveForTemp?: () => void): boolean {
     // Check if there is a value for valueTemp, if not return false
     if (this.valueTemp === '') return false;
 
@@ -158,10 +155,7 @@ export class bolc__Form {
     this.bolSettings.TimeStampSave = '';
 
     // Try to save the project for temporary storage
-    try {
-      //TODO: implement this function
-      //bolProject_SaveForTemp();
-    } catch (err) {}
+    if (bolProject_SaveForTemp) bolProject_SaveForTemp();
 
     // Check the value of TempMode
     switch (this.bolSettings.TempMode) {
@@ -223,10 +217,9 @@ export class bolc__Form {
     const currentAction = this._obj?.action;
 
     // Call the global onsubmit event handler if it exists, and return if it returns false
-    //TODO: implement this function
-    /* if (window.onsubmit && !OnSubmit(noValidation)) {
+    if (window.onsubmit && this.OnSubmit && !this.OnSubmit(noValidation)) {
       return false;
-    } */
+    }
 
     if (this._obj) {
       // Set the form's action to the specified URL
@@ -443,14 +436,8 @@ export class bolc__Form {
     // Declare and initialize ProjectOutput variable
     let ProjectOutput;
 
-    //ToDO: implement this function
-    /* try {
-      // Attempt to call bolProject_Summary function and store result in ProjectOutput variable
-      //ToDO: implement this both functions
-      ProjectOutput = bolProject_Summary(page);
-    } catch (err) {
-      // If an error occurs, do nothing and proceed to the next step
-    }
+    // Attempt to call bolProject_Summary function and store result in ProjectOutput variable
+    if (this.bolProject_Summary) ProjectOutput = this.bolProject_Summary(page);
 
     // Check if ProjectOutput variable has a value
     if (ProjectOutput) {
@@ -464,7 +451,7 @@ export class bolc__Form {
       // Go to the page indicated by the cntOutput container element
       this.bolPage.goTo(page);
       return;
-    } */
+    }
 
     this.checkGlobalScript();
 
@@ -495,20 +482,20 @@ export class bolc__Form {
    * this method creates the HTML code for all fields on the summary page and returns it as a string.
    * @returns is the HTML code as string
    */
-  public getStringOutput(): string {
+  private getStringOutput(): string {
     let stringOutput: string = '';
     let fieldset: string = '';
     let linealternate: boolean = true;
 
-    //ToDO: implement this function
-    /*  for (let i = 0; i < this.numFields; i++) {
-      let field = getField(getNthFieldName(i));
+    for (let i = 0; i < (this.numFields ? this.numFields : 0); i++) {
+      let field = getField(this.getNthFieldName ? this.getNthFieldName(i) : '');
       let fieldset_active = '';
 
       if (!field) continue;
       // if it should not appear in the summary, check for this class
-      if (FieldNotInSummary(field, this.bolSettings)) continue;
-      if (field.id == this.bolSettings.FieldNameConfigJSON) continue;
+      if (FieldNotInSummary(field as HTMLElement, this.bolSettings)) continue;
+      if ((field as HTMLElement).id == this.bolSettings.FieldNameConfigJSON)
+        continue;
 
       //To get the value of the field
       let fieldvalue = this.getFieldValue(field);
@@ -525,13 +512,13 @@ export class bolc__Form {
       }
 
       stringOutput += this.createRow(
-        bol_GetFieldTitle(field),
+        bol_GetFieldTitle(field as HTMLElement),
         fieldvalue,
         !linealternate
       );
 
       linealternate = !linealternate;
-    } */
+    }
     return stringOutput;
   }
 
