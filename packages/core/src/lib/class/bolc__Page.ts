@@ -228,7 +228,7 @@ export class bolc__Page {
           continue;
         }
         if (!this.bolSettings._CheckedPages[i - 1]) {
-          this.bolDialog.ShowErrorPages();
+          // this.bolDialog.ShowErrorPages();
           return this.active;
         }
       }
@@ -251,8 +251,9 @@ export class bolc__Page {
     // If pgNo is not provided, set it to the next page number after the currently active page
     if (!pgNo) pgNo = this.active + 1;
     // If pgNo is equal to the last page and _modeSummary is enabled in the bolSettings, call the Summary() method of the form
-    if (pgNo == this.max && this.bolSettings._modeSummary)
-      this.bolForm.Summary();
+    if (pgNo == this.max && this.bolSettings._modeSummary) {
+      // this.bolForm.Summary();
+    }
   }
 
   public StringOffFields(
