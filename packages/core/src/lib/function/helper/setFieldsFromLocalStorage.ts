@@ -1,4 +1,4 @@
-import { InitForm } from "../../class/initForm";
+import { bolc__Page } from "../../class";
 import { HTMLInputsType } from "../../type/htmlInputsType";
 import { getField } from "../other-functions/getField";
 
@@ -8,7 +8,7 @@ import { getField } from "../other-functions/getField";
    * Sets the active page based on the stored value.
    * Retrieves each field value from the local store and updates the corresponding field.
    */
-export function setFieldsFromLocalStorage(localStoreHeader: string): void {
+export function setFieldsFromLocalStorage(bolPage: bolc__Page, localStoreHeader: string): void {
     const fieldlist = localStorage
       .getItem(localStoreHeader + '_FormFieldList')
       ?.split(',');
@@ -20,7 +20,7 @@ export function setFieldsFromLocalStorage(localStoreHeader: string): void {
       localStorage.getItem(localStoreHeader + '_active_page') || '1';
 
     // Set the active page based on the stored value
-    InitForm.bolPage.Switch(parseInt(pg));
+    bolPage.Switch(parseInt(pg));
 
     // Retrieve each field value from the local store and update the corresponding field
     fieldlist.forEach((item) => {

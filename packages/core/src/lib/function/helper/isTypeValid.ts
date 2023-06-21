@@ -1,6 +1,6 @@
-import { InitForm } from "../../class/initForm";
+import { bolc__Settings } from '../../class/bolc__Settings';
 
-export function IsTypeValid(file?: File): boolean {
+export function IsTypeValid(bolSettings: bolc__Settings, file?: File): boolean {
     // If file is not provided or is undefined, return false
     if (!file) {
       return false;
@@ -11,7 +11,7 @@ export function IsTypeValid(file?: File): boolean {
     const fileExtension = "." + fileNameParts[fileNameParts.length - 1].toLowerCase().trim();
   
     // Get the allowed file types from bolSettings and convert them to lowercase
-    const allowedFileTypes = (InitForm.bolSettings.fileTypes as string).toLowerCase();
+    const allowedFileTypes = (bolSettings.fileTypes as string).toLowerCase();
   
     // Check if the file extension is present in the allowed file types
     if (allowedFileTypes.includes(fileExtension)) {

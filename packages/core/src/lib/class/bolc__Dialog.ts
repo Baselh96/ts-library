@@ -12,12 +12,7 @@ export class bolc__Dialog {
   //is the dialog-modal
   private _obj?: Modal;
 
-  //Is an instance of the Settings class, which we get as a parameter in the configuration.
-  private bolSettings: bolc__Settings;
-
-  constructor(bolSettings: bolc__Settings, public bol__project_strings: MsgString[]) {
-    this.bolSettings = bolSettings;
-
+  constructor(public bolSettings: bolc__Settings, public bol__project_strings: MsgString[]) {
     if (this.bolSettings.isBootstrap) {
       //We see if we already have the dialog modal
       let e: HTMLElement | null = document.getElementById('bolDialog');

@@ -1,5 +1,6 @@
 import { btnstring } from '../function/helper/btnstring';
 import { bol_MakeInfoButton } from '../function/styling/bol_MakeInfoButton';
+import { bolc__Dialog } from './bolc__Dialog';
 import { bolc__Settings } from './bolc__Settings';
 
 /***************************************************************************************************
@@ -8,11 +9,8 @@ import { bolc__Settings } from './bolc__Settings';
  ***************************************************************************************************/
 export class bolc__Fieldset {
   public _obj: HTMLElement | null = null;
-  //Is an instance of the Settings class, which we get as a parameter in the configuration.
-  private bolSettings: bolc__Settings;
 
-  constructor(bolSettings: bolc__Settings, objId?: string) {
-    this.bolSettings = bolSettings;
+  constructor(public bolSettings: bolc__Settings, objId?: string) {
 
     // If objId is undefined, exit the constructor
     if (!objId || objId.length === 0) return;
@@ -141,7 +139,7 @@ export class bolc__Fieldset {
     }
   }
 
-  StyleIt(bolProject_Refresh?: (id: string, fs_id?: string) => void): void {
+  StyleIt(bolDialog: bolc__Dialog, bolProject_Refresh?: (id: string, fs_id?: string) => void): void {
     // Check if _obj is defined
     if (!this._obj) return;
 
@@ -210,6 +208,7 @@ export class bolc__Fieldset {
 
     // Call the editFsLegend method to update the fieldset's style and content
     this.editFsLegend(
+      bolDialog,
       newStyle || '',
       myClasses,
       fsLegend,
@@ -230,6 +229,7 @@ export class bolc__Fieldset {
    * @param fsLegend is the FsLegend element
    */
   private editFsLegend(
+    bolDialog: bolc__Dialog,
     newStyle: string,
     myClasses: string[],
     fsLegend: HTMLLegendElement,
@@ -248,6 +248,7 @@ export class bolc__Fieldset {
     if (myClasses.length > 0) {
       // Create the content of fsLegend using custom classes
       this.createContentOfFsLegend(
+        bolDialog,
         newStyle,
         myClasses,
         fsLegend,
@@ -258,8 +259,8 @@ export class bolc__Fieldset {
     } else if (legendHelp !== '') {
       // If there are no custom classes but there is legend help, display the legend text with info button
       fsLegend.innerHTML = `${legendText}${bol_MakeInfoButton(
-        legendHelp,
-        this.bolSettings
+        this.bolSettings,
+        legendHelp
       )}`;
     }
 
@@ -292,6 +293,7 @@ export class bolc__Fieldset {
    * @param legendHelp is the help text from the FsLegend element
    */
   private createContentOfFsLegend(
+    bolDialog: bolc__Dialog,
     newStyle: string,
     myClasses: string[],
     fsLegend: HTMLLegendElement,
@@ -310,7 +312,7 @@ export class bolc__Fieldset {
     // Set the inner HTML of the column based on whether legendHelp is present
     lColL.innerHTML =
       legendHelp !== ''
-        ? `${legendText}${bol_MakeInfoButton(legendHelp, this.bolSettings)}`
+        ? `${legendText}${bol_MakeInfoButton(this.bolSettings, legendHelp)}`
         : fsLegend.innerText;
 
     // Add the newStyle class if it exists
@@ -332,6 +334,7 @@ export class bolc__Fieldset {
       lColR.appendChild(
         btnstring(
           this.bolSettings,
+          bolDialog,
           myClass,
           this._obj?.id || '',
           bolProject_Refresh

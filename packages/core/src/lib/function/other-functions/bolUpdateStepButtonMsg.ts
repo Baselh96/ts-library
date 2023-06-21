@@ -1,5 +1,5 @@
 import { InitForm } from "../../class/initForm";
 
-export function bolUpdateStepButtonMsg(InfoText: string) {
-    InitForm.bolSteps._infoText = InfoText;
+export function bolUpdateStepButtonMsg(initForm: InitForm, InfoText: string) {
+    initForm.bolSteps._infoText = InfoText;
 }

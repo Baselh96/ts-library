@@ -2,31 +2,30 @@ import { bolDebug } from '../function';
 import { bol_BlockCheck } from '../function/helper/bol_BlockCheck';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Object } from './bolc__Object';
-import { InitForm } from './initForm';
 import { getField } from '../function/other-functions/getField';
 import { HTMLInputsType } from '../type/htmlInputsType';
+import { bolc__Steps } from './bolc__Steps';
+import { bolc__Dialog } from './bolc__Dialog';
+import { bolc__Form } from './bolc__Form';
 
 /***************************************************************************************************
  * BLOCK
  * Page
  ***************************************************************************************************/
 export class bolc__Page {
-  //Is an instance of the Settings class, which we get as a parameter in the configuration.
-  private bolSettings: bolc__Settings;
   public max: number;
-  // private bolSteps: bolc__Steps;
-  // private bolForm: bolc__Form;
-  // private bolDialog: bolc__Dialog;
 
   constructor(
-    bolSettings: bolc__Settings,
+    public bolSettings: bolc__Settings,
+    public bolSteps: bolc__Steps,
+    public bolDialog: bolc__Dialog,
+    public bolForm: bolc__Form,
     public bolProject_DoSomethingOnPage?: (aktivePage: number) => void,
     public bolProject_CheckPageBeforeLeave?: (aktivePage: number) => boolean,
     public bol__page_focus?: any[],
     public page_focus?: any[]
   ) {
-    this.bolSettings = bolSettings;
-    this.max = bolc__Page.max;
+    this.max = bolc__Page.getMax();
   }
 
   get active(): number {
@@ -37,7 +36,7 @@ export class bolc__Page {
     this.bolSettings.page = pageNumber;
   }
 
-  static get max(): number {
+  static getMax(): number {
     const e = document.querySelectorAll('div.row[id^=page]');
     return e ? e.length : 0;
   }
@@ -86,7 +85,7 @@ export class bolc__Page {
     this.Show();
 
     // Update the step indicator
-    InitForm.bolSteps.Update(oldPgNo, this.active);
+    this.bolSteps.Update(oldPgNo, this.active);
 
     if (this.bolProject_DoSomethingOnPage)
       this.bolProject_DoSomethingOnPage(this.active);
@@ -177,7 +176,11 @@ export class bolc__Page {
     if (this.bolSettings._checkPage) return true;
 
     // Perform block-level field validation check on the specified page
-    const b: boolean = bol_BlockCheck('page' + pgNo);
+    const b: boolean = bol_BlockCheck(
+      this.bolSettings,
+      this.bolDialog,
+      'page' + pgNo
+    );
 
     // Update the PageChecked property with the validation result
     this.bolSettings.PageChecked = b;
@@ -228,7 +231,7 @@ export class bolc__Page {
           continue;
         }
         if (!this.bolSettings._CheckedPages[i - 1]) {
-          // this.bolDialog.ShowErrorPages();
+          this.bolDialog.ShowErrorPages();
           return this.active;
         }
       }
@@ -252,7 +255,7 @@ export class bolc__Page {
     if (!pgNo) pgNo = this.active + 1;
     // If pgNo is equal to the last page and _modeSummary is enabled in the bolSettings, call the Summary() method of the form
     if (pgNo == this.max && this.bolSettings._modeSummary) {
-      // this.bolForm.Summary();
+      this.bolForm.Summary(this);
     }
   }
 
@@ -274,7 +277,7 @@ export class bolc__Page {
 
     // Check if fields exist
     if (!fields || fields.length <= 0) {
-      return bolDebug('', '(bolc_Page.StringOfFields) no objects');
+      return bolDebug(this.bolSettings, '', '(bolc_Page.StringOfFields) no objects');
     }
 
     // Set the mode (default is 'j' for JSON)

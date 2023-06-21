@@ -36,17 +36,9 @@ export class bolc__Form {
   private _DSGVO_Link: string = '';
   private _SidebarText: string = '';
 
-  //Is an instance of the bolSettings class, which we get as a parameter.
-  private bolSettings: bolc__Settings;
-  //Is an instance of the bolPage class, which we get as a parameter.
-  private bolPage: bolc__Page;
-
-  private bolFormVersion: string;
-
   constructor(
-    bolSettings: bolc__Settings,
-    bolPage: bolc__Page,
-    bolFormVersion: string,
+    public bolSettings: bolc__Settings,
+    public bolFormVersion: string,
     public OnSubmit?: (noValidation: boolean) => boolean,
     public bolProject_Summary?: (page: number) => string,
     public getNthFieldName?: (n: number) => string,
@@ -55,9 +47,6 @@ export class bolc__Form {
     public contoll_names?: any[],
     public bol__notInSummary?: any[]
   ) {
-    this.bolSettings = bolSettings;
-    this.bolPage = bolPage;
-    this.bolFormVersion = bolFormVersion;
     // Get the form element with the name "bolForm"
     this._obj = document.getElementsByName('bolForm')[0] as HTMLFormElement;
 
@@ -70,7 +59,7 @@ export class bolc__Form {
 
     // If the form element was still not found, return a debugging message indicating that no form element was found
     if (this._obj == undefined) {
-      return bolDebug(false, '(bolc__Form) no form element!');
+      return bolDebug(this.bolSettings, false, '(bolc__Form) no form element!');
     }
   }
 
@@ -83,7 +72,7 @@ export class bolc__Form {
     ) as HTMLInputElement;
     return e
       ? e.value.trim()
-      : bolDebug('', '(bolc__Form) no valueTemp element');
+      : bolDebug(this.bolSettings, '', '(bolc__Form) no valueTemp element');
   }
 
   /**
@@ -95,7 +84,7 @@ export class bolc__Form {
     ) as HTMLInputElement;
     return e
       ? e.value.trim()
-      : bolDebug('', '(bolc__Form) no valueTemp element');
+      : bolDebug(this.bolSettings, '', '(bolc__Form) no valueTemp element');
   }
 
   /**
@@ -308,13 +297,13 @@ export class bolc__Form {
         '</span><br><br>' +
         htmlString +
         '</div>';
-      bolShow('bolSideBar');
+      bolShow(this.bolSettings, 'bolSideBar');
     } else {
       // If "htmlString" is empty, remove any existing content from "ele"
       ele.innerHTML = '';
 
       // Hide the "bolSideBar" element
-      bolHide('bolSideBar');
+      bolHide(this.bolSettings, 'bolSideBar');
     }
   }
 
@@ -416,7 +405,7 @@ export class bolc__Form {
    *this methode creates the Summary-Page.
    * @returns ture, if the page is succesfully created.
    */
-  Summary(): boolean | undefined {
+  public Summary(bolPage: bolc__Page): boolean | undefined {
     // Get the summary container element
     // If the container is not found, try finding it in the "control_page" element
     const cntOutput: HTMLElement | null =
@@ -425,7 +414,7 @@ export class bolc__Form {
 
     // If the container is still not found, log an error and return
     if (!cntOutput)
-      return bolDebug(false, '(bolc__Form) kein container fuer "control_page"');
+      return bolDebug(this.bolSettings, false, '(bolc__Form) kein container fuer "control_page"');
 
     // Clear the container
     cntOutput.innerHTML = '';
@@ -449,14 +438,14 @@ export class bolc__Form {
       }
 
       // Go to the page indicated by the cntOutput container element
-      this.bolPage.goTo(page);
+      bolPage.goTo(page);
       return;
     }
 
     this.checkGlobalScript();
 
     cntOutput.innerHTML = this.getStringOutput();
-    this.bolPage.goTo(page);
+    bolPage.goTo(page);
     return true;
   }
 
@@ -512,7 +501,7 @@ export class bolc__Form {
       }
 
       stringOutput += this.createRow(
-        bol_GetFieldTitle(field as HTMLElement),
+        bol_GetFieldTitle(this.bolSettings, field as HTMLElement),
         fieldvalue,
         !linealternate
       );

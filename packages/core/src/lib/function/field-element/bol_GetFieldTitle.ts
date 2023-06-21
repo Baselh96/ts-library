@@ -1,4 +1,4 @@
-import { InitForm } from '../../class/initForm';
+import { bolc__Settings } from '../../class';
 import { getAlternative } from './getAlternative';
 
 /**
@@ -7,7 +7,7 @@ import { getAlternative } from './getAlternative';
  * @returns The title of the field.
  */
 
-export function bol_GetFieldTitle(obj: HTMLElement): string {
+export function bol_GetFieldTitle(bolSettings: bolc__Settings, obj: HTMLElement): string {
   // Radio buttons should have the same title as the first element in the group.
   if (
     obj instanceof HTMLInputElement &&
@@ -18,8 +18,8 @@ export function bol_GetFieldTitle(obj: HTMLElement): string {
 
   // Try to find an alternative name.
   let s =
-    obj instanceof HTMLInputElement && InitForm.bolSettings
-      ? getAlternative(obj.name, InitForm.bolSettings.FieldNamesAlternative)
+    obj instanceof HTMLInputElement && bolSettings
+      ? getAlternative(obj.name, bolSettings.FieldNamesAlternative)
       : '';
 
   // Use the field title if no alternative name was found.

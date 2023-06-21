@@ -1,13 +1,14 @@
 import { findBolHiddenField } from "../helper/findBolHiddenField";
+import { bolc__Settings } from '../../class/bolc__Settings';
 
 /**
  * Removes a hidden field with the specified name from the container element.
  * @param fname The name of the hidden field to be removed.
  * @returns A boolean indicating whether the operation was successful.
  */
-export function bol_HiddenFieldRemove(fname: string): boolean {
+export function bol_HiddenFieldRemove(bolSettings: bolc__Settings, fname: string): boolean {
     // Check if the container element for hidden fields exists
-    const r = findBolHiddenField();
+    const r = findBolHiddenField(bolSettings);
   
     // If the container element is still not found, return false
     if (!r) return false;

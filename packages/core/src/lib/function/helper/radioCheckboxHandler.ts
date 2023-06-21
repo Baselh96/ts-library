@@ -1,5 +1,4 @@
-import { bolc__Object } from '../../class';
-import { InitForm } from '../../class/initForm';
+import { bolc__Object, bolc__Settings } from '../../class';
 import { FieldError } from '../../model/field-error.model';
 
 /**
@@ -9,6 +8,7 @@ import { FieldError } from '../../model/field-error.model';
  * @param obj is the corresponding HTML element
  */
 export function radioCheckboxHandler(
+  bolSettings: bolc__Settings,
   hasError: boolean,
   obj: bolc__Object,
   isRadio: boolean
@@ -18,18 +18,18 @@ export function radioCheckboxHandler(
     if (isRadio) {
       // For radio buttons, check if the error for the radio group already exists
       if (
-        InitForm.bolSettings._fdsError.filter(
+        bolSettings._fdsError.filter(
           (field) => field.name === obj.name
         ).length <= 0
       ) {
         // Add a new FieldError to the error list
-        InitForm.bolSettings._fdsError.push(
+        bolSettings._fdsError.push(
           new FieldError(obj.id, obj.label || '')
         );
       }
     } else {
       // For checkboxes, add a new FieldError to the error list
-      InitForm.bolSettings._fdsError.push(
+      bolSettings._fdsError.push(
         new FieldError(obj.id, obj.label || '')
       );
     }
@@ -39,7 +39,7 @@ export function radioCheckboxHandler(
   if (obj._obj?.parentNode) {
     // Update the color of the parent node based on the error status
     (obj._obj.parentNode as HTMLElement).style.color = hasError
-      ? InitForm.bolSettings._colorErrorBg
+      ? bolSettings._colorErrorBg
       : 'inherit';
   }
 }

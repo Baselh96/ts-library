@@ -1,5 +1,4 @@
 import { bolc__Object } from '../../class/bolc__Object';
-import { InitForm } from '../../class/initForm';
 import { FieldError } from '../../model/field-error.model';
 import { HTMLInputsType } from '../../type/htmlInputsType';
 import { clearInputError } from '../other-functions/clearInputError';
@@ -7,17 +6,22 @@ import { getField } from '../other-functions/getField';
 import { InputError } from '../other-functions/inputError';
 import { bol_CheckObjectVisibility } from '../recursive-fun/bol_CheckObjectVisibility';
 import { radioCheckboxHandler } from './radioCheckboxHandler';
+import { bolc__Settings } from '../../class/bolc__Settings';
 
 /**
  * This function iterates over a collection of fields and
  * performs validation checks based on their type and properties
  * @param fields is a collection of fields
  */
-export function checkFields(fields: NodeListOf<Element>): void {
+export function checkFields(
+  bolSettings: bolc__Settings,
+  fields: NodeListOf<Element>
+): void {
   let radiogrp = '';
 
   for (let i = 0; i < fields.length; i++) {
     const obj = new bolc__Object(
+      bolSettings,
       document.getElementById(fields[i].id) as HTMLInputsType
     );
 
@@ -38,12 +42,14 @@ export function checkFields(fields: NodeListOf<Element>): void {
     switch (obj.type) {
       case 'radio': {
         const field = getField(radiogrp) as RadioNodeList;
-        if (field) radioCheckboxHandler(field.value == '', obj, true);
+        if (field)
+          radioCheckboxHandler(bolSettings, field.value == '', obj, true);
         break;
       }
       case 'checkbox':
         // Call radioCheckboxHandler for checkboxes
         radioCheckboxHandler(
+          bolSettings,
           !(obj._obj as HTMLInputElement).checked,
           obj,
           false
@@ -54,14 +60,14 @@ export function checkFields(fields: NodeListOf<Element>): void {
       case 'password':
       case 'file':
         // Call otherHandler for text-based fields
-        otherHandler(obj, 'error_text');
+        otherHandler(bolSettings, obj, 'error_text');
         break;
       case 'listbox':
       case 'select':
       case 'select-one':
       case 'select_multiple':
         // Call otherHandler for select-based fields
-        otherHandler(obj, 'error_select');
+        otherHandler(bolSettings, obj, 'error_select');
         break;
       default:
       // Handle any other field types if necessary
@@ -74,17 +80,19 @@ export function checkFields(fields: NodeListOf<Element>): void {
  * @param obj is the corresponding HTML element
  * @param msgString is the id for msgString for errors
  */
-function otherHandler(obj: bolc__Object, msgString: string): void {
+function otherHandler(
+  bolSettings: bolc__Settings,
+  obj: bolc__Object,
+  msgString: string
+): void {
   // Check if the field is empty
   if (obj.isEmpty) {
     // Add a new FieldError to the error list
-    InitForm.bolSettings._fdsError.push(
-      new FieldError(obj.id, obj.label || '')
-    );
+    bolSettings._fdsError.push(new FieldError(obj.id, obj.label || ''));
 
     InputError(
       obj._obj as HTMLElement,
-      InitForm.bolSettings.GetMsgString(msgString),
+      bolSettings.GetMsgString(msgString),
       0,
       0
     );

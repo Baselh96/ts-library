@@ -3,13 +3,13 @@
 
 import {
   bol_CalcDate,
+  bol_FileLoad,
   bol_GetObjectType,
   bol_getPage4Object,
 } from '../function';
 import { bol_LabelGet } from '../function/field-element/bol_LabelGet';
 import { DataClassDate } from './DataClassDate';
 import { InputError } from '../function/other-functions/inputError';
-import { InitForm } from './initForm';
 import { bol_DateString } from '../function/dateAndTime/bol_DateString';
 import { ResetField } from '../function/helper/resetField';
 import { clearInputError } from '../function/other-functions/clearInputError';
@@ -19,6 +19,8 @@ import { HTMLInfo } from '../function/helper/htmlInfo';
 import { HTMLRequiredRadio } from '../function/helper/htmlRequiredRadio';
 import { HTMLInputsType } from '../type/htmlInputsType';
 import { getField } from '../function/other-functions/getField';
+import { bolc__Dialog } from './bolc__Dialog';
+import { bolc__Settings } from './bolc__Settings';
 
 export class bolc__Object {
   public _obj?: HTMLInputsType;
@@ -26,7 +28,7 @@ export class bolc__Object {
   public type?: string | null = '';
   public radioName: string = '';
 
-  constructor(obj?: HTMLInputsType) {
+  constructor(public bolSettings: bolc__Settings, obj?: HTMLInputsType) {
     // If obj is undefined, return
     if (obj === undefined) return;
     this._obj = obj;
@@ -366,7 +368,7 @@ export class bolc__Object {
     if (!oDate.Scan(nDate, dFormat)) {
       InputError(
         this._obj,
-        InitForm.bolSettings.GetMsgString('error_notadate'),
+        this.bolSettings.GetMsgString('error_notadate'),
         1,
         0
       );
@@ -412,7 +414,7 @@ export class bolc__Object {
   private showInputError(msgString: string): void {
     InputError(
       this._obj as HTMLElement,
-      InitForm.bolSettings.GetMsgString(msgString),
+      this.bolSettings.GetMsgString(msgString),
       1,
       0
     );
@@ -499,7 +501,7 @@ export class bolc__Object {
       case 'div':
       case 'fieldset':
         // Reset the list of error fields
-        InitForm.bolSettings._fdsError = [];
+        this.bolSettings._fdsError = [];
 
         // Reset the styling and errors of input, select, and textarea elements within the container
         this._obj
@@ -530,7 +532,7 @@ export class bolc__Object {
     }
   }
 
-  public StyleIt() {
+  public StyleIt(dialog: bolc__Dialog) {
     // Skip styling for undefined objects, hidden elements, and elements with "bol-nolabel" class
     if (
       this._obj == undefined ||
@@ -547,12 +549,14 @@ export class bolc__Object {
         this.styleCheckBoxAndRadio(false); // Apply styling for radio buttons
         break;
       case 'file':
-        if (InitForm.bolSettings.useLoad4Files as boolean)
-          this._obj.setAttribute('onchange', 'bol_FileLoad(this);');
-        if (InitForm.bolSettings.useAccept4Files as boolean)
+        if (this.bolSettings.useLoad4Files as boolean)
+          this._obj.addEventListener('onchange', () =>
+            bol_FileLoad(this, this.bolSettings, dialog)
+          );
+        if (this.bolSettings.useAccept4Files as boolean)
           this._obj.setAttribute(
             'accept',
-            InitForm.bolSettings.fileTypes as string
+            this.bolSettings.fileTypes as string
           );
         this.styleOtherTypes();
         break;
@@ -568,7 +572,9 @@ export class bolc__Object {
    * Stylizes a checkbox or radiobutton element.
    * @param isCheckBox Specifies whether it is a checkbox element (true) or not (false - radiobutton).
    */
-  private styleCheckBoxAndRadio(isCheckBox: boolean): void {
+  private styleCheckBoxAndRadio(
+    isCheckBox: boolean
+  ): void {
     if (!this._obj) return; // If the element is not present, exit the function.
 
     // Set the 'bolTitle' attribute of the element if it is undefined.
@@ -590,15 +596,19 @@ export class bolc__Object {
       // Style the element based on whether it is required or not.
       if (this._obj.required) {
         if (isCheckBox) {
-          HTMLRequired(spanElements[0] as HTMLElement); // Add required styling for checkbox.
+          HTMLRequired(this.bolSettings, spanElements[0] as HTMLElement); // Add required styling for checkbox.
         } else {
-          HTMLRequiredRadio(spanElements[0] as HTMLElement); // Add required styling for radiobutton.
+          HTMLRequiredRadio(this.bolSettings, spanElements[0] as HTMLElement); // Add required styling for radiobutton.
         }
       }
 
       // Add info icon and functionality if help text is provided.
       if (texts.texthelp != '') {
-        HTMLInfo(spanElements[0] as HTMLElement, texts.texthelp);
+        HTMLInfo(
+          this.bolSettings,
+          spanElements[0] as HTMLElement,
+          texts.texthelp
+        );
       }
     }
   }
@@ -643,8 +653,9 @@ export class bolc__Object {
       // Apply styling based on the extracted text properties
       if (texts.textlabel.length !== 0) this._label.innerHTML = texts.textlabel;
       if (texts.texttooltip.length !== 0) this._obj.title = texts.texttooltip;
-      if (this._obj.required) HTMLRequired(this._label);
-      if (texts.texthelp.length !== 0) HTMLInfo(this._label, texts.texthelp);
+      if (this._obj.required) HTMLRequired(this.bolSettings, this._label);
+      if (texts.texthelp.length !== 0)
+        HTMLInfo(this.bolSettings, this._label, texts.texthelp);
     }
   }
 }

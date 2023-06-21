@@ -1,5 +1,5 @@
-import { InitForm } from "../../class/initForm";
+import { bolc__Page } from '../../class/bolc__Page';
 
-export function bolPageSwitch(NewNo: number) {
-    InitForm.bolPage.Switch(NewNo);
+export function bolPageSwitch(bolPage: bolc__Page, NewNo: number) {
+    bolPage.Switch(NewNo);
 }

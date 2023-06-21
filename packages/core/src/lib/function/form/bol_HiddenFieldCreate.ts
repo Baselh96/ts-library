@@ -1,4 +1,5 @@
 import { findBolHiddenField } from '../helper/findBolHiddenField';
+import { bolc__Settings } from '../../class/bolc__Settings';
 
 /**
  * Creates or updates a hidden field with the specified name and value.
@@ -6,9 +7,9 @@ import { findBolHiddenField } from '../helper/findBolHiddenField';
  * @param fvalue - The value to be set for the hidden field.
  * @returns A boolean indicating whether the operation was successful.
  */
-export function bol_HiddenFieldCreate(fname: string, fvalue: string): boolean {
+export function bol_HiddenFieldCreate(bolSettings: bolc__Settings, fname: string, fvalue: string): boolean {
   // Check if the container element for hidden fields exists
-  const r = findBolHiddenField();
+  const r = findBolHiddenField(bolSettings);
 
   // If the container element is still not found, return false
   if (!r) return false;

@@ -1,11 +1,14 @@
-import { InitForm } from '../../class/initForm';
+import { bolc__Settings } from '../../class/bolc__Settings';
 
 /**
  * Adds either a star symbol (*) or a special symbol for required fields to an HTML element.
  * @param MyLabel The HTML element to which the symbol should be added.
  */
-export function HTMLRequired(MyLabel: HTMLElement) {
-  if (InitForm.bolSettings._useStar4required) {
+export function HTMLRequired(
+  bolSettings: bolc__Settings,
+  MyLabel: HTMLElement
+) {
+  if (bolSettings._useStar4required) {
     // If _useStar4required is true, add an asterisk (*) to the text of the element.
     MyLabel.innerText = MyLabel.innerText + ' *';
   } else {
@@ -13,11 +16,11 @@ export function HTMLRequired(MyLabel: HTMLElement) {
     MyLabel.innerHTML =
       MyLabel.innerHTML +
       '&nbsp;<span class="bol-field-required ' +
-      InitForm.bolSettings.symbol_fieldrequired +
+      bolSettings.symbol_fieldrequired +
       '" title="' +
-      InitForm.bolSettings._ttRequired +
+      bolSettings._ttRequired +
       '" alt="Symbol ' +
-      InitForm.bolSettings._ttRequired +
+      bolSettings._ttRequired +
       '"></span>';
   }
 }

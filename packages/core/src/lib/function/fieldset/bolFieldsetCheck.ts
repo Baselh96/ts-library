@@ -1,9 +1,12 @@
+import { bolc__Dialog, bolc__Settings } from '../../class';
 import { bol_BlockCheck } from '../helper/bol_BlockCheck';
 import { bol_getObjectPage } from '../recursive-fun/bol_getObjectPage';
 /**
  * This function takes a button element as a parameter and performs some actions related to a fieldset.
  */
 export function bolFieldsetCheck(
+  bolSettings: bolc__Settings,
+  bolDialog: bolc__Dialog,
   Button: HTMLButtonElement,
   bolProject_Refresh?: (id: string, fs_id?: string) => void
 ): void {
@@ -17,7 +20,7 @@ export function bolFieldsetCheck(
   if (!e) return;
 
   // Call the bol_BlockCheck function with the element's ID
-  bol_BlockCheck(e.id);
+  bol_BlockCheck(bolSettings, bolDialog, e.id);
 
   if (bolProject_Refresh)
     bolProject_Refresh(

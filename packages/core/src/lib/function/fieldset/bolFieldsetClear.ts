@@ -1,10 +1,11 @@
-import { bolc__Object } from '../../class';
+import { bolc__Object, bolc__Settings } from '../../class';
 import { bol_getObjectPage } from '../recursive-fun/bol_getObjectPage';
 
 /**
  * This  function takes a button element as a parameter and performs actions to clear the inputs within a fieldset.
  */
 export function bolFieldsetClear(
+  bolSettings: bolc__Settings,
   Button: HTMLButtonElement,
   bolProject_Clear?: (id: string, fs_id?: string) => void
 ) {
@@ -19,7 +20,7 @@ export function bolFieldsetClear(
 
   // Create a new bolc__Object instance with the element as an HTMLInputElement
   // and call the Clear() method to clear the inputs within the fieldset
-  new bolc__Object(e as HTMLInputElement).Clear();
+  new bolc__Object(bolSettings, e as HTMLInputElement).Clear();
 
   if (bolProject_Clear)
     bolProject_Clear(

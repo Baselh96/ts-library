@@ -1,12 +1,12 @@
+import { bolc__Settings } from '../../class';
 import { bolc__Fieldset } from '../../class/bolc__Fieldset';
-import { InitForm } from '../../class/initForm';
 
 /**
  * This function takes a fieldset name as a parameter and expands the specified fieldset
  */
-export function bolFieldsetExpand(fname: string): void {
-  // Create a new instance of bolc__Fieldset with the provided fieldset name and InitForm.bolSettings
-  const fieldset = new bolc__Fieldset(InitForm.bolSettings, fname);
+export function bolFieldsetExpand(bolSettings: bolc__Settings, fname: string): void {
+  // Create a new instance of bolc__Fieldset with the provided fieldset name and bolSettings
+  const fieldset = new bolc__Fieldset(bolSettings, fname);
 
   // Check if the fieldset instance exists
   if (!fieldset) return;

@@ -40,8 +40,8 @@ export function bolFormInit(
   bolProject_Summary?: (page: number) => string,
   getNthFieldName?: (n: number) => string,
   bolProject_Refresh?: (id: string, fs_id?: string) => void
-): void {
-  InitForm.init(
+): InitForm {
+  return new InitForm(
     configJSON,
     bolBarStyle,
     bol__project_strings,

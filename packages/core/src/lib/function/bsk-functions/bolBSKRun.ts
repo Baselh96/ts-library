@@ -1,5 +1,5 @@
-import { InitForm } from '../../class/initForm';
+import { InitForm } from '../../class';
 
-export function bolBSKRun(URLpart: string, numFields?: number) {
-  InitForm.bolBSK.Run(URLpart, numFields);
+export function bolBSKRun(initform: InitForm, URLpart: string, numFields?: number) {
+  initform.bolBSK?.Run(URLpart, numFields);
 }

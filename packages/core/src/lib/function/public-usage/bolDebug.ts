@@ -1,4 +1,4 @@
-import { InitForm } from "../../class/initForm";
+import { bolc__Settings } from '../../class/bolc__Settings';
 
 /**
  * this method to display the messages on the console
@@ -6,9 +6,9 @@ import { InitForm } from "../../class/initForm";
  * @param msg is the message to be displayed on the console
  * @returns is the parameter anyStuff
  */
-export function bolDebug(anyStuff: any, msg: string): any {
+export function bolDebug(bolSettings: bolc__Settings, anyStuff: any, msg: string): any {
     // Check if debug mode is enabled
-    if (InitForm.bolSettings._modeDebug) {
+    if (bolSettings._modeDebug) {
         // Output debug message to console
         console.log(msg);
     }

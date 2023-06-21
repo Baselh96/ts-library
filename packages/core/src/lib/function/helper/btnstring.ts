@@ -1,4 +1,4 @@
-import { bolc__Settings } from '../../class';
+import { bolc__Dialog, bolc__Settings } from '../../class';
 import { bolFieldsetCheck } from '../fieldset/bolFieldsetCheck';
 import { bolFieldsetToggle } from '../fieldset/bolFieldsetToggle';
 import { bolFieldsetTogglePart } from '../fieldset/bolFieldsetTogglePart';
@@ -11,6 +11,7 @@ import { bolFieldsetTogglePart } from '../fieldset/bolFieldsetTogglePart';
  */
 export function btnstring(
   bolSettings: bolc__Settings,
+  bolDialog: bolc__Dialog,
   btype: string,
   bname: string,
   bolProject_Refresh?: (id: string, fs_id?: string) => void
@@ -34,7 +35,7 @@ export function btnstring(
         'fieldset_btn_togglepart'
       );
       btn.addEventListener('onclick', () =>
-        bolFieldsetTogglePart(btn, bolProject_Refresh)
+        bolFieldsetTogglePart(bolSettings, btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-down':
@@ -48,7 +49,7 @@ export function btnstring(
         'fieldset_btn_toggle'
       );
       btn.addEventListener('onclick', () =>
-        bolFieldsetToggle(btn, bolProject_Refresh)
+        bolFieldsetToggle(bolSettings, btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-erase':
@@ -62,7 +63,7 @@ export function btnstring(
         'fieldset_btn_check'
       );
       btn.addEventListener('onclick', () =>
-        bolFieldsetCheck(btn, bolProject_Refresh)
+        bolFieldsetCheck(bolSettings, bolDialog, btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-check':
@@ -76,7 +77,7 @@ export function btnstring(
         'fieldset_btn_check'
       );
       btn.addEventListener('onclick', () =>
-        bolFieldsetCheck(btn, bolProject_Refresh)
+        bolFieldsetCheck(bolSettings, bolDialog, btn, bolProject_Refresh)
       );
       break;
     case 'bol-fs-toggle':
@@ -90,7 +91,7 @@ export function btnstring(
         'fieldset_btn_toggle'
       );
       btn.addEventListener('onclick', () =>
-        bolFieldsetToggle(btn, bolProject_Refresh)
+        bolFieldsetToggle(bolSettings, btn, bolProject_Refresh)
       );
       break;
   }

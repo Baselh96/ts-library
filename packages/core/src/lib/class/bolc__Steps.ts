@@ -3,8 +3,9 @@ import { getCssVariable } from '../function/helper/getCssVariable';
 import { setPrecentStyleHelper } from '../function/helper/setPrecentStyleHelper';
 import { bolc__Settings } from './bolc__Settings';
 import { bolc__Page } from './bolc__Page';
+import { bolPageSwitch } from '../function';
 
-interface IButton {
+export interface IButton {
   lang: string;
   page: number;
   visible: boolean;
@@ -26,12 +27,7 @@ export class bolc__Steps {
   private _color_line: string = '';
   private _color_background: string = '';
 
-  //Is an instance of the bolSettings class, which we get as a parameter.
-  private bolSettings: bolc__Settings;
-
-  constructor(bolSettings: bolc__Settings) {
-    this.bolSettings = bolSettings;
-
+  constructor(public bolSettings: bolc__Settings) {
     this._color_line = getCssVariable(
       '--bol-color-stepbutton-line',
       'rgb(222, 222, 222)'
@@ -41,7 +37,7 @@ export class bolc__Steps {
       'rgb(0, 64, 128)'
     );
 
-    for (let i = 1; i < bolc__Page.max + 1; i++) {
+    for (let i = 1; i < bolc__Page.getMax() + 1; i++) {
       this.Buttons.push({
         lang: 'de',
         page: i,
@@ -154,15 +150,15 @@ export class bolc__Steps {
     }
   }
 
-  get layout(): string {
+  public getLayout(): string {
     return this.bolSettings._StepButtonLayout;
   }
 
-  set layout(newValue: string) {
+  public setLayout(bolPage: bolc__Page, newValue: string) {
     this.bolSettings._StepButtonLayout =
       newValue.toLowerCase() === 'pib' ? 'pib' : 'ib';
 
-    this.StyleIt();
+    this.StyleIt(bolPage);
   }
 
   get active(): number {
@@ -194,7 +190,7 @@ export class bolc__Steps {
    * Creates the step buttons and returns a row element containing the buttons.
    * @returns A row element containing the step buttons.
    */
-  public CreateButtons(): HTMLDivElement {
+  public createButtons(bolPage: bolc__Page): HTMLDivElement {
     const myRow = document.createElement('div');
     myRow.className = 'row';
 
@@ -223,7 +219,7 @@ export class bolc__Steps {
       btn.innerText = steplabel;
 
       // Set button onclick attribute and tooltip attribute
-      btn.setAttribute('onclick', 'bolPageSwitch(' + button.page + ');');
+      btn.addEventListener('onclick', () => bolPageSwitch(bolPage, button.page));
       btn.setAttribute('title', steptip);
 
       // Add active/inactive class and background image if applicable
@@ -422,8 +418,8 @@ export class bolc__Steps {
   /**
    * This method show the button
    */
-  public Show(): void {
-    this.StyleIt();
+  public Show(bolPage: bolc__Page): void {
+    this.StyleIt(bolPage);
 
     // Search for the button with the specified page from bolPage number
     const button = this.Buttons.find((item) => item.page === this.active);
@@ -437,7 +433,7 @@ export class bolc__Steps {
   /**
    * This  method formats and updates the appearance of the step-by-step buttons.
    */
-  public StyleIt(): void {
+  public StyleIt(bolPage: bolc__Page): void {
     // get the container element
     const cnt = document.getElementById('bolStepButtons');
 
@@ -455,9 +451,9 @@ export class bolc__Steps {
     cnt.appendChild(myColBase);
 
     // depending on the layout, create the elements and append them to myColBase
-    switch (this.layout) {
+    switch (this.getLayout()) {
       case 'bip':
-        myColBase.appendChild(this.CreateButtons());
+        myColBase.appendChild(this.createButtons(bolPage));
         myColBase.appendChild(this.CreateInfo());
         myColBase.appendChild(this.CreateProgress());
         break;
@@ -467,14 +463,14 @@ export class bolc__Steps {
         break;
       case 'ib':
         myColBase.appendChild(this.CreateInfo());
-        myColBase.appendChild(this.CreateButtons());
+        myColBase.appendChild(this.createButtons(bolPage));
         break;
       case 'b':
-        myColBase.appendChild(this.CreateButtons());
+        myColBase.appendChild(this.createButtons(bolPage));
         break;
       default: // ibp
         myColBase.appendChild(this.CreateInfo());
-        myColBase.appendChild(this.CreateButtons());
+        myColBase.appendChild(this.createButtons(bolPage));
         myColBase.appendChild(this.CreateProgress());
         break;
     }

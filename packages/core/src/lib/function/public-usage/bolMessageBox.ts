@@ -6,6 +6,6 @@ import { InitForm } from "../../class/initForm";
  * @param newTitle is title of dialog
  * @param newMessage is a message of dialog 
  */
-export function bolMessageBox(newTitle: string, newMessage: string): void {
-    InitForm.bolDialog.Show(newTitle, newMessage, false);
+export function bolMessageBox(initForm: InitForm, newTitle: string, newMessage: string): void {
+    initForm.bolDialog.Show(newTitle, newMessage, false);
 }

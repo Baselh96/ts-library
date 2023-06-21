@@ -10,18 +10,18 @@ import { bolc__BSK } from './bolc__BSK';
 import { MsgString } from '../model/msg-string.model';
 
 export class InitForm {
-  public static bolSettings: bolc__Settings;
-  public static bolForm: bolc__Form;
-  public static bolPage: bolc__Page;
-  public static bolDialog: bolc__Dialog;
-  public static bolSteps: bolc__Steps;
-  public static bolBSK: bolc__BSK;
-  public static bolFormVersion: string;
+  public bolSettings: bolc__Settings;
+  public bolForm: bolc__Form;
+  public bolPage: bolc__Page;
+  public bolDialog: bolc__Dialog;
+  public bolSteps: bolc__Steps;
+  public bolBSK: bolc__BSK | undefined;
+  public bolFormVersion: string;
 
   /**
    * The init function initializes various components and settings for the form
    */
-  public static init(
+  constructor (
     configJSON: any,
     bolBarStyle: boolean,
     bol__project_strings: MsgString[],
@@ -40,7 +40,7 @@ export class InitForm {
     bol__notInSummary?: any[]
   ) {
     // Create a new instance of bolc__Settings with the specified arguments
-    InitForm.bolSettings = new bolc__Settings(
+    this.bolSettings = new bolc__Settings(
       configJSON,
       bol__msg_strings_iso,
       bol__control_names,
@@ -48,22 +48,27 @@ export class InitForm {
     );
 
     // set the bolFormVersion to an empty string
-    InitForm.bolFormVersion = '';
+    this.bolFormVersion = '';
 
-    // Create a new instance of bolc__Page with the specified arguments
-    InitForm.bolPage = new bolc__Page(
-      InitForm.bolSettings,
-      bolProject_DoSomethingOnPage,
-      bolProject_CheckPageBeforeLeave,
-      bol__page_focus,
-      page_focus
-    );
+    // Create a new instance of bolc__Steps with the bolSettings and bolPage as arguments
+    this.bolSteps = new bolc__Steps(this.bolSettings);
 
     // Create a new instance of bolc__Form with the specified arguments
-    InitForm.bolForm = new bolc__Form(
-      InitForm.bolSettings,
-      InitForm.bolPage,
-      InitForm.bolFormVersion,
+    this.bolDialog = new bolc__Dialog(
+      this.bolSettings,
+      bol__project_strings
+    );
+
+    //To store dialog object global
+    (window as any).bolGlobal = {};
+    (window as any).bolGlobal.bolDialog = this.bolDialog;
+
+    
+
+    // Create a new instance of bolc__Form with the specified arguments
+    this.bolForm = new bolc__Form(
+      this.bolSettings,
+      this.bolFormVersion,
       OnSubmit,
       bolProject_Summary,
       getNthFieldName,
@@ -73,28 +78,31 @@ export class InitForm {
       bol__notInSummary
     );
 
-    // Create a new instance of bolc__Form with the specified arguments
-    InitForm.bolDialog = new bolc__Dialog(
-      InitForm.bolSettings,
-      bol__project_strings
+    // Create a new instance of bolc__Page with the specified arguments
+    this.bolPage = new bolc__Page(
+      this.bolSettings,
+      this.bolSteps,
+      this.bolDialog,
+      this.bolForm,
+      bolProject_DoSomethingOnPage,
+      bolProject_CheckPageBeforeLeave,
+      bol__page_focus,
+      page_focus
     );
 
-    // Create a new instance of bolc__Steps with the bolSettings and bolPage as arguments
-    InitForm.bolSteps = new bolc__Steps(InitForm.bolSettings);
-
     // Call the StyleIt method of bolForm with bolBarStyle as an argument
-    InitForm.bolForm.StyleIt(bolBarStyle);
+    this.bolForm.StyleIt(bolBarStyle);
 
     // Call the bol_StylePages function
     bol_StylePages();
 
     // Call the bol_StyleFieldsets function with the bolProject_Refresh function as an argument
-    bol_StyleFieldsets(undefined, bolProject_Refresh);
+    bol_StyleFieldsets(this.bolSettings, this.bolDialog, undefined, bolProject_Refresh);
 
     // Call the bol_StyleFields function
-    bol_StyleFields();
+    bol_StyleFields(this.bolSettings, this.bolDialog);
 
     // Go to the specified page using the goTo method of bolPage
-    InitForm.bolPage.goTo(InitForm.bolSettings.page);
+    this.bolPage.goTo(this.bolSettings.page);
   }
 }

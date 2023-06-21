@@ -2,7 +2,7 @@ import { setFieldsFromLocalStorage } from '../function/helper/setFieldsFromLocal
 import { SplitStreet } from '../function/helper/splitStreet';
 import { getField } from '../function/other-functions/getField';
 import { HTMLInputsType } from '../type/htmlInputsType';
-import { InitForm } from './initForm';
+import { bolc__Page } from './bolc__Page';
 
 /********************* Buergerservice Konto ************************/
 export class bolc__BSK {
@@ -10,7 +10,7 @@ export class bolc__BSK {
   private localStoreHeader?: string;
   private bol__SKFieldMapping: any;
 
-  constructor(bol__SKFieldMapping: any, public getNthFieldName: (n: number) => string) {
+  constructor(public bolPage: bolc__Page, bol__SKFieldMapping: any, public getNthFieldName: (n: number) => string) {
     this.bol__SKFieldMapping = bol__SKFieldMapping;
 
     // Retrieve the form type element
@@ -149,7 +149,7 @@ export class bolc__BSK {
     // Save the active page to the local store
     localStorage.setItem(
       this.localStoreHeader + '_active_page',
-      InitForm.bolPage.active.toString()
+      this.bolPage.active.toString()
     );
 
     // Add the active page to the field list
@@ -171,7 +171,7 @@ export class bolc__BSK {
    */
   private LocalStoreLoad() {
     // Set fields' values from the local store
-    setFieldsFromLocalStorage(this.localStoreHeader || '');
+    setFieldsFromLocalStorage(this.bolPage, this.localStoreHeader || '');
 
     const fds = this.bol__SKFieldMapping;
 

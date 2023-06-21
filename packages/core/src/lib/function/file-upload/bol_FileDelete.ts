@@ -1,16 +1,16 @@
-import { InitForm } from '../../class/initForm';
 import { getField } from '../other-functions/getField';
+import { bolc__Settings } from '../../class/bolc__Settings';
 
 /**
- * This function is used to delete a file input field's value and update the files in the InitForm.bolSettings
+ * This function is used to delete a file input field's value and update the files in the bolSettings
  * @param fieldId is the id for the to deleted field
  */
-export function bol_FileDelete(fieldId?: string): void {
+export function bol_FileDelete(bolSettings: bolc__Settings, fieldId?: string): void {
   // Check if fieldId is empty or not provided
   if (!fieldId || fieldId.length === 0) return;
 
-  // Update files in InitForm.bolSettings
-  InitForm.bolSettings.UpdateFiles(fieldId);
+  // Update files in bolSettings
+  bolSettings.UpdateFiles(fieldId);
 
   // Get the field element with the specified fieldId
   const field = getField(fieldId);
